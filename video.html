@@ -267,22 +267,6 @@
     font-family:'Caveat', cursive; font-size:19px; font-weight:600; color:var(--gold);
   }
 
-  /* Muncul hanya kalau browser menolak autoplay bersuara. */
-  .sound-hint{
-    display:flex; align-items:center; justify-content:center; gap:7px;
-    margin:14px auto 0; padding:9px 16px;
-    background:rgba(4,32,58,.72); border:1px solid rgba(255,201,143,.38);
-    border-radius:999px; color:var(--ocean-pale);
-    font-family:'Quicksand', sans-serif; font-size:12.5px; font-weight:700;
-    letter-spacing:.05em; cursor:pointer; -webkit-tap-highlight-color:transparent;
-    animation:hintIn .45s ease both;
-  }
-  .sound-hint[hidden]{ display:none; }
-  .sound-hint:hover{ background:rgba(72,202,228,.2); }
-  .sound-hint:active{ transform:translateY(1px); }
-  .sound-hint:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:3px; }
-  .sound-hint svg{ width:16px; height:16px; flex-shrink:0; }
-  @keyframes hintIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
   .ctrl-btn:focus-visible,
   .vol-icon:focus-within,
   .title:focus-visible{
@@ -297,7 +281,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .bubble,.drifter,.spark,.deco,.drip,.sound-hint{ animation:none!important; }
+    .bubble,.drifter,.spark,.deco,.drip{ animation:none!important; }
     .ctrl-btn,.title{ transition:none!important; }
   }
 </style>
@@ -380,11 +364,6 @@
   </div>
 
 
-  <button class="sound-hint" id="soundHint" type="button" hidden>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
-    ketuk untuk hidupkan suara
-  </button>
-
   <p class="caption">momen-momen yang aku simpan buat kamu</p>
 </main>
 
@@ -418,7 +397,6 @@ const volumeThumb = document.getElementById('volumeThumb');
 const muteBtn = document.getElementById('muteBtn');
 
 let lastVolume = 1;
-let usingLocalFile = false;
 
 function formatTime(sec){
   if(!isFinite(sec) || sec < 0) sec = 0;
@@ -430,33 +408,15 @@ function formatTime(sec){
 /* ---- Autoplay ----
    Browser hanya mengizinkan autoplay bersuara kalau pengguna sudah
    pernah berinteraksi dengan domain ini. Kalau percobaan bersuara
-   ditolak, kita mundur ke autoplay bisu (selalu diizinkan) lalu
-   offer tombol untuk menghidupkan suara. Tombol play/pause tetap
-   normal, jadi video tetap bisa dijeda dan diulang. */
-const soundHint = document.getElementById('soundHint');
-let mutedByPolicy = false;
-
+   ditolak, kita mundur ke autoplay bisu supaya video tetap jalan.
+   Suara bisa dinyalakan lewat kontrol volume di bawah. Tombol
+   play/pause tetap normal, jadi video tetap bisa dijeda dan diulang. */
 function syncVolumeUI(){
   const shown = (video.muted || video.volume === 0) ? 0 : video.volume;
   volumeFill.style.width = (shown * 100) + '%';
   volumeThumb.style.left = (shown * 100) + '%';
   volumeTrack.setAttribute('aria-valuenow', Math.round(shown * 100));
   muteBtn.setAttribute('aria-pressed', shown === 0 ? 'true' : 'false');
-}
-
-function offerSound(){
-  if(!soundHint) return;
-  soundHint.hidden = false;
-  const enable = () => {
-    video.muted = false;
-    video.volume = lastVolume || 1;
-    lastVolume = video.volume;
-    mutedByPolicy = false;
-    soundHint.hidden = true;
-    syncVolumeUI();
-  };
-  soundHint.addEventListener('click', enable, { once:true });
-  document.addEventListener('pointerdown', enable, { once:true });
 }
 
 function attemptAutoplay(){
@@ -469,17 +429,14 @@ function attemptAutoplay(){
     p.catch(() => {
       // Ditolak kebijakan autoplay: mundur ke mode bisu.
       video.muted = true;
-      mutedByPolicy = true;
       let q;
       try { q = video.play(); } catch(e){ q = null; }
       if(q && q.catch) q.catch(() => {});
       syncVolumeUI();
-      offerSound();
     });
   } else if(!p){
     video.muted = true;
-    mutedByPolicy = true;
-    offerSound();
+    syncVolumeUI();
   }
 }
 
@@ -576,7 +533,7 @@ video.addEventListener('timeupdate', () => {
 video.addEventListener('loadedmetadata', () => {
   if(!video.duration) return;
   remainingTimeLabel.textContent = '-' + formatTime(video.duration);
-  if(!usingLocalFile) titleText.textContent = CLIP.title;
+  titleText.textContent = CLIP.title;
 });
 
 function bindSeek(track, apply){
