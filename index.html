@@ -127,10 +127,13 @@
   }
   @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.22) rotate(-6deg); } 100%{ transform:scale(1); } }
 
-  .dots{ display:flex; justify-content:center; gap:14px; margin:4px 0 22px; }
-  .dot{ position:relative; width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
+  /* clamp(): titik PIN ikut mengecil di layar sempit supaya 6 titik
+     tetap muat di dalam card. Di layar lebar nilainya tetap 44px/14px,
+     sama seperti sebelumnya. */
+  .dots{ display:flex; justify-content:center; gap:clamp(6px, 3vw, 14px); margin:4px 0 22px; }
+  .dot{ position:relative; width:clamp(30px, 10vw, 44px); height:clamp(30px, 10vw, 44px); display:flex; align-items:center; justify-content:center; }
   .dot img{
-    width:44px; height:44px; object-fit:contain; border-radius:50%;
+    width:100%; height:100%; object-fit:contain; border-radius:50%;
     transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
     background:linear-gradient(135deg, rgba(255,255,255,.9) 0%, rgba(230,248,255,.9) 100%);
     box-shadow:0 4px 12px rgba(0,80,130,.15), 0 0 0 2px rgba(72,202,228,.2) inset;
@@ -262,12 +265,7 @@
   <div class="card-peeker"><img src="./assets/images/5.png" alt="" /></div>
   <div class="card-corner-dec"><img src="./assets/images/4.png" alt="" /></div>
 
-  <div class="dots" id="dots">
-    <span class="dot"><img src="./assets/images/1.png" alt="" /></span>
-    <span class="dot"><img src="./assets/images/1.png" alt="" /></span>
-    <span class="dot"><img src="./assets/images/1.png" alt="" /></span>
-    <span class="dot"><img src="./assets/images/1.png" alt="" /></span>
-  </div>
+  <div class="dots" id="dots"></div>
 
   <div class="pad" id="pad">
     <button class="key" data-k="1">1</button>
@@ -306,7 +304,7 @@
 <p class="music-hint" id="musicHint">musiknya belum jalan? ketuk di sini</p>
 
 <script>
-const CORRECT_PASSWORD = "0101";
+const CORRECT_PASSWORD = "280925";
 const REDIRECT_URL = "love-letter.html";
 const IS_SHELL = window.self === window.top;
 const oceanBg = document.getElementById('oceanBg');
@@ -401,7 +399,18 @@ for(let i = 0; i < 4; i++){
   oceanAnimals.appendChild(im);
 }
 
-const dotsEl = document.querySelectorAll('#dots .dot');
+// Titik PIN dibangun dari panjang CORRECT_PASSWORD, bukan jumlah span
+// yang ditulis manual di HTML. Sebelumnya ada 4 titik hardcoded, jadi
+// saat PIN jadi 6 digit user hanya melihat 4 titik terakhir menyala
+// dan tidak bisa tahu sudah berapa digit yang dia masukkan.
+const dotsBox = document.getElementById('dots');
+for(let i = 0; i < CORRECT_PASSWORD.length; i++){
+  const d = document.createElement('span');
+  d.className = 'dot';
+  d.innerHTML = '<img src="./assets/images/1.png" alt="" />';
+  dotsBox.appendChild(d);
+}
+const dotsEl = dotsBox.querySelectorAll('.dot');
 const statusEl = document.getElementById('status');
 const mascot = document.getElementById('mascot');
 const overlay = document.getElementById('successOverlay');
