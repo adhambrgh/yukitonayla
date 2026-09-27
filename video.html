@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Momen Kita ΓÇö Video</title>
+<title>Momen Kita — Video</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Caveat:wght@600;700&family=Quicksand:wght@500;600;700&display=swap');
 
@@ -26,8 +26,8 @@
 
   body{
     min-height:100vh; position:relative; overflow-x:hidden;
-    display:flex; align-items:center; justify-content:center;
-    padding:34px 16px 44px;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:16px 16px 44px;
     font-family:'Quicksand', sans-serif; color:#fff;
     background:
       url('./assets/images/2.jpg') center / cover no-repeat,
@@ -59,9 +59,9 @@
     animation:drift linear infinite;
   }
   @keyframes drift{
-    0%{ transform:translateX(-16vw) translateY(0); }
-    50%{ transform:translateX(104vw) translateY(-20px); }
-    100%{ transform:translateX(-16vw) translateY(14px); }
+    0%{ transform:translate3d(-16vw,0,0); }
+    50%{ transform:translate3d(104vw,-20px,0); }
+    100%{ transform:translate3d(-16vw,14px,0); }
   }
 
   .spark{
@@ -75,6 +75,37 @@
     filter:drop-shadow(0 10px 18px rgba(0,30,70,.35));
   }
   .deco img{ display:block; width:100%; height:auto; }
+
+  /* Nav persisten: selalu terjangkau tanpa scroll, ini yang bikin
+     "tidak bisa ke halaman selanjutnya" hilang. */
+  .topnav{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    width:100%; max-width:420px; margin:0 auto 14px; padding:8px 10px;
+    background:rgba(4,32,58,.72); border:1px solid rgba(202,240,248,.18);
+    border-radius:999px; backdrop-filter:blur(6px);
+  }
+  .topnav a{
+    display:flex; align-items:center; gap:5px; flex:0 1 auto; min-width:0;
+    padding:7px 13px; border-radius:999px; text-decoration:none;
+    font-size:12.5px; font-weight:700; white-space:nowrap;
+    background:rgba(255,255,255,.1); color:var(--ocean-pale);
+    border:1px solid rgba(202,240,248,.22);
+    transition:background .18s ease, transform .15s ease;
+  }
+  .topnav a:hover{ background:rgba(72,202,228,.3); transform:translateY(-1px); }
+  .topnav a:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:2px; }
+  .topnav svg{ width:14px; height:14px; flex-shrink:0; }
+  .topnav a span{ overflow:hidden; text-overflow:ellipsis; }
+
+  /* Hemat sumber daya saat video diputar: matikan semua dekorasi
+     yang sebelumnya bikin lag di HP. */
+  body.is-playing .field,
+  body.is-playing .ocean-rays{ display:none; }
+  body.is-playing .deco,
+  body.is-playing .drip{ animation-play-state:paused; }
+  body.is-playing .deco{ filter:none; }
+
   .deco.d1{ width:66px; top:7%;  left:5%;  transform:rotate(-9deg); animation:bobA 7s ease-in-out infinite; }
   .deco.d2{ width:54px; top:13%; right:6%; transform:rotate(8deg);  animation:bobB 8.5s ease-in-out infinite; }
   .deco.d3{ width:48px; bottom:16%; left:4%; transform:rotate(6deg); animation:bobB 9.5s ease-in-out infinite reverse; }
@@ -88,7 +119,9 @@
   @keyframes bobA{ 0%,100%{ transform:translateY(0) rotate(-9deg); } 50%{ transform:translateY(-14px) rotate(2deg); } }
   @keyframes bobB{ 0%,100%{ transform:translateY(0) rotate(8deg); } 50%{ transform:translateY(-12px) rotate(-3deg); } }
 
-  .stage{ position:relative; z-index:2; width:100%; max-width:340px; }
+  /* align-items:flex-start + margin:auto centering supaya konten panjang
+     tidak pernah terjepit/terpotong di layar pendek. */
+  .stage{ position:relative; z-index:2; width:100%; max-width:340px; margin:auto; }
 
   .device{
     position:relative;
@@ -115,25 +148,64 @@
     background:transparent;
   }
 
-  .upload-overlay{
+  /* Overlay status di atas video: putar / memuat / buffering / error */
+  .veil{
     position:absolute; inset:0; z-index:2;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
-    padding:18px; text-align:center;
-    background:rgba(3,15,28,.55);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:11px; padding:18px; text-align:center;
+    background:rgba(3,15,28,.42);
   }
-  .upload-overlay.hidden{ display:none; }
+  .veil[hidden]{ display:none; }
+
+  .play-fab{
+    display:flex; align-items:center; justify-content:center;
+    width:74px; height:74px; padding:0; cursor:pointer;
+    border:none; border-radius:50%; color:#fff;
+    background:linear-gradient(135deg, var(--ocean-bright) 0%, var(--ocean-mid) 100%);
+    box-shadow:0 14px 30px -10px rgba(0,0,0,.6);
+    transition:transform .18s ease, filter .18s ease;
+  }
+  .play-fab:hover{ transform:scale(1.07); filter:brightness(1.1); }
+  .play-fab:active{ transform:scale(.95); }
+  .play-fab:focus-visible{ outline:3px solid rgba(255,201,143,.95); outline-offset:3px; }
+  .play-fab svg{ width:32px; height:32px; margin-left:4px; }
+
+  .veil-msg{ margin:0; font-size:12.5px; line-height:1.55; color:rgba(202,240,248,.85); }
+  .veil-msg b{ color:var(--ocean-bright); }
+
+  .spinner{
+    width:34px; height:34px; border-radius:50%;
+    border:3px solid rgba(202,240,248,.28); border-top-color:var(--ocean-bright);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .retry-btn{
+    padding:9px 18px; cursor:pointer; border-radius:999px;
+    border:1.5px solid rgba(202,240,248,.5);
+    background:rgba(72,202,228,.22); color:#fff;
+    font-family:'Quicksand', sans-serif; font-size:13px; font-weight:700;
+    transition:background .18s ease;
+  }
+  .retry-btn:hover{ background:rgba(72,202,228,.38); }
+
+  /* Spinner kecil di tengah saat buffering di tengah playback */
+  .buffering{
+    position:absolute; inset:0; z-index:3; pointer-events:none;
+    display:none; align-items:center; justify-content:center;
+    background:rgba(3,15,28,.28);
+  }
+  .buffering.on{ display:flex; }
+
   .upload-btn{
-    display:flex; flex-direction:column; align-items:center; gap:8px;
-    padding:14px 22px; cursor:pointer;
-    border:1.5px dashed rgba(202,240,248,.55); border-radius:12px;
-    background:rgba(202,240,248,.08); color:var(--ocean-pale);
-    font-size:15px; font-weight:600; text-align:center;
-    transition:background .2s ease, transform .2s ease;
+    display:block; margin:10px auto 0; padding:8px 14px;
+    background:none; border:1px solid rgba(202,240,248,.28); border-radius:999px;
+    color:rgba(202,240,248,.7); font-family:'Quicksand', sans-serif;
+    font-size:11.5px; font-weight:600; letter-spacing:.06em; cursor:pointer;
+    transition:background .2s ease, color .2s ease;
   }
-  .upload-btn:hover{ background:rgba(202,240,248,.16); transform:translateY(-2px); }
-  .upload-btn svg{ width:24px; height:24px; opacity:.85; }
-  .upload-note{ margin:0; font-size:12px; line-height:1.6; color:rgba(202,240,248,.7); }
-  .upload-note b{ color:var(--ocean-bright); }
+  .upload-btn:hover{ background:rgba(72,202,228,.18); color:var(--ocean-pale); }
+  .upload-btn:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:2px; }
 
   .title{
     margin:0 0 12px; min-height:1.4em;
@@ -207,15 +279,6 @@
     box-shadow:0 1px 3px rgba(0,0,0,.4);
   }
 
-  .pick-btn{
-    display:block; margin:10px auto 0; padding:8px 14px;
-    background:none; border:1px solid rgba(202,240,248,.35); border-radius:999px;
-    color:rgba(202,240,248,.85); font-family:'Quicksand', sans-serif;
-    font-size:12px; font-weight:600; letter-spacing:.06em; cursor:pointer;
-    transition:background .2s ease;
-  }
-  .pick-btn:hover{ background:rgba(72,202,228,.22); }
-
   .drips{ display:flex; align-items:flex-start; width:100%; margin-top:-2px; }
   .drip{
     background:var(--device-deep); flex-shrink:0; transform-origin:top center;
@@ -281,6 +344,11 @@
 <div class="ocean-rays"></div>
 <div class="field" id="field"></div>
 
+<nav class="topnav" aria-label="Navigasi halaman">
+  <a href="harapan.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>harapan</span></a>
+  <a href="closing.html">lanjut<span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+</nav>
+
 <img class="deco d1" src="./assets/images/5.png" alt="">
 <img class="deco d2" src="./assets/images/4.png" alt="">
 <img class="deco d3" src="./assets/images/7.png" alt="">
@@ -294,18 +362,23 @@
     <img class="corner bl" src="./assets/images/4.png" alt="">
     <img class="corner br" src="./assets/images/9.png" alt="">
     <div class="screen" id="screen">
-      <video id="video" playsinline preload="metadata"></video>
+      <video id="video" poster="./assets/videos/momen-kita.jpg" preload="auto"
+             playsinline webkit-playsinline disablepictureinpicture
+             src="./assets/videos/momen-kita.mp4"></video>
 
-      <div class="upload-overlay" id="uploadOverlay">
-        <label class="upload-btn" for="fileInput">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          pilih video dari hp
-        </label>
-        <input type="file" id="fileInput" accept="video/*" multiple hidden>
+      <div class="buffering" id="buffering"><div class="spinner"></div></div>
+
+      <div class="veil" id="veil">
+        <div class="spinner" id="veilSpinner"></div>
+        <p class="veil-msg" id="veilMsg">memuat video&hellip;</p>
+        <button class="play-fab" id="playFab" hidden aria-label="Putar video">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="retry-btn" id="retryBtn" hidden>coba lagi</button>
       </div>
     </div>
 
-    <p class="title" id="titleText" contenteditable="true" spellcheck="false">belum ada video</p>
+    <p class="title" id="titleText" contenteditable="true" spellcheck="false">momen kita</p>
 
     <div class="progress-track" id="progressTrack" role="slider" aria-label="Posisi video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
       <div class="progress-fill" id="progressFill"></div>
@@ -317,14 +390,14 @@
     </div>
 
     <div class="controls-row">
-      <button class="ctrl-btn" id="rewindBtn" aria-label="Mundur 10 detik" disabled>
+      <button class="ctrl-btn" id="rewindBtn" aria-label="Mundur 10 detik">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm10 0V6l-8.5 6 8.5 6z"/></svg>
       </button>
-      <button class="ctrl-btn play" id="playPauseBtn" aria-label="Play atau pause" disabled>
+      <button class="ctrl-btn play" id="playPauseBtn" aria-label="Play atau pause">
         <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
       </button>
-      <button class="ctrl-btn" id="forwardBtn" aria-label="Maju 10 detik" disabled>
+      <button class="ctrl-btn" id="forwardBtn" aria-label="Maju 10 detik">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 6v12l8.5-6L13 6zM3 6v12l8.5-6L3 6z"/></svg>
       </button>
     </div>
@@ -338,6 +411,9 @@
         <div class="volume-thumb" id="volumeThumb"></div>
       </div>
     </div>
+
+    <button class="upload-btn" id="pickBtn" type="button">pilih video dari hp</button>
+    <input type="file" id="fileInput" accept="video/*" hidden>
   </div>
 
   <div class="drips" aria-hidden="true">
@@ -354,19 +430,25 @@
 
   <div class="actions">
     <a class="btn btn-primary" href="closing.html">buka kata penutup</a>
+    <a class="btn btn-ghost" href="harapan.html">kembali ke doa &amp; harapan</a>
   </div>
 </main>
 
 <script>
 const CLIP = {
-  file: 'WhatsApp Video 2026-09-19 at 08.36.17.mp4',
   title: 'momen kita',
-  url: './assets/videos/' + encodeURIComponent('WhatsApp Video 2026-09-19 at 08.36.17.mp4')
+  url: './assets/videos/momen-kita.mp4'
 };
 
 const video = document.getElementById('video');
 const fileInput = document.getElementById('fileInput');
-const uploadOverlay = document.getElementById('uploadOverlay');
+const pickBtn = document.getElementById('pickBtn');
+const veil = document.getElementById('veil');
+const veilSpinner = document.getElementById('veilSpinner');
+const veilMsg = document.getElementById('veilMsg');
+const playFab = document.getElementById('playFab');
+const retryBtn = document.getElementById('retryBtn');
+const buffering = document.getElementById('buffering');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const playIcon = document.getElementById('playIcon');
 const pauseIcon = document.getElementById('pauseIcon');
@@ -384,6 +466,7 @@ const volumeThumb = document.getElementById('volumeThumb');
 const muteBtn = document.getElementById('muteBtn');
 
 let lastVolume = 1;
+let usingLocalFile = false;
 
 function formatTime(sec){
   if(!isFinite(sec) || sec < 0) sec = 0;
@@ -392,54 +475,105 @@ function formatTime(sec){
   return m + ':' + s;
 }
 
-function setControlsEnabled(on){
-  [playPauseBtn, rewindBtn, forwardBtn].forEach((b) => { b.disabled = !on; });
+function showVeil(mode, msg){
+  if(mode === 'none'){ veil.hidden = true; return; }
+  veil.hidden = false;
+  veilSpinner.hidden = (mode !== 'loading');
+  playFab.hidden = (mode !== 'ready');
+  retryBtn.hidden = (mode !== 'error');
+  if(msg) veilMsg.textContent = msg;
+}
+
+function showBuffering(on){
+  buffering.classList.toggle('on', !!on);
+}
+
+/* Kegagalan muat tidak lagi me-reset halaman jadi kosong, tapi menampilkan
+   pesan + tombol coba lagi, karena itu yang bikin video terasa rusak. */
+function handleMediaError(){
+  showBuffering(false);
+  if(usingLocalFile){
+    showVeil('error', 'video dari hp gagal dimuat. coba pilih ulang.');
+  } else {
+    showVeil('error', 'video belum bisa dimuat. cek koneksi lalu coba lagi.');
+  }
 }
 
 function loadClip(clip){
-  video.src = clip.url;
+  usingLocalFile = false;
   titleText.textContent = clip.title;
-  uploadOverlay.classList.add('hidden');
-  setControlsEnabled(true);
-}
-
-function resetToEmptyState(){
-  video.removeAttribute('src');
+  showVeil('loading', 'memuat video\u2026');
+  video.src = clip.url;
   video.load();
-  titleText.textContent = 'belum ada video';
-  progressFill.style.width = '0%';
-  progressThumb.style.left = '0%';
-  currentTimeLabel.textContent = '0:00';
-  remainingTimeLabel.textContent = '-0:00';
-  setControlsEnabled(false);
-  uploadOverlay.classList.remove('hidden');
+  const p = video.play();
+  if(p && p.catch) p.catch(() => {});
 }
 
-function init(){
-  const test = document.createElement('video');
-  test.preload = 'metadata';
-  test.addEventListener('loadedmetadata', () => loadClip(CLIP), { once: true });
-  test.addEventListener('error', resetToEmptyState, { once: true });
-  test.src = CLIP.url;
-}
+retryBtn.addEventListener('click', () => {
+  showVeil('loading', 'memuat video\u2026');
+  video.load();
+  const p = video.play();
+  if(p && p.catch) p.catch(() => {});
+});
+
+playFab.addEventListener('click', () => {
+  const p = video.play();
+  if(p && p.catch) p.catch(() => {});
+});
+
+pickBtn.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', () => {
   const file = (fileInput.files || [])[0];
   if(!file) return;
-  loadClip({ title: file.name.replace(/\.[^.]+$/, ''), url: URL.createObjectURL(file) });
-  video.play().catch(() => {});
+  usingLocalFile = true;
+  titleText.textContent = file.name.replace(/\.[^.]+$/, '');
+  showVeil('loading', 'memuat video dari hp\u2026');
+  video.src = URL.createObjectURL(file);
+  video.load();
+  const p = video.play();
+  if(p && p.catch) p.catch(() => {});
 });
 
 
-playPauseBtn.addEventListener('click', () => {
-  if(!video.getAttribute('src') && !video.src){ fileInput.click(); return; }
-  if(video.paused){ const attempt = video.play(); if(attempt && attempt.catch) attempt.catch(() => {}); }
-  else video.pause();
+function togglePlay(){
+  if(video.paused){
+    const attempt = video.play();
+    if(attempt && attempt.catch) attempt.catch(() => {});
+  } else {
+    video.pause();
+  }
+}
+
+playPauseBtn.addEventListener('click', togglePlay);
+
+video.addEventListener('play', () => {
+  playIcon.style.display = 'none';
+  pauseIcon.style.display = '';
+  showVeil('none');
+  showBuffering(false);
+  document.body.classList.add('is-playing');
 });
 
-video.addEventListener('play', () => { playIcon.style.display = 'none'; pauseIcon.style.display = ''; });
-video.addEventListener('pause', () => { playIcon.style.display = ''; pauseIcon.style.display = 'none'; });
-video.addEventListener('error', resetToEmptyState);
+video.addEventListener('pause', () => {
+  playIcon.style.display = '';
+  pauseIcon.style.display = 'none';
+  document.body.classList.remove('is-playing');
+  // Setelah pernah Jalan, tombol putar besar tidak muncul lagi saat dijeda.
+  if(video.currentTime > 0 && video.readyState >= 2) showVeil('none');
+});
+
+video.addEventListener('waiting', () => showBuffering(true));
+video.addEventListener('stalled', () => showBuffering(true));
+video.addEventListener('canplay', () => { showBuffering(false); if(video.paused && video.currentTime === 0) showVeil('ready'); });
+video.addEventListener('playing', () => showBuffering(false));
+video.addEventListener('error', handleMediaError);
+video.addEventListener('ended', () => {
+  document.body.classList.remove('is-playing');
+  showVeil('ready');
+  playIcon.style.display = '';
+  pauseIcon.style.display = 'none';
+});
 
 rewindBtn.addEventListener('click', () => { video.currentTime = Math.max(0, video.currentTime - 10); });
 forwardBtn.addEventListener('click', () => {
@@ -459,6 +593,7 @@ video.addEventListener('timeupdate', () => {
 video.addEventListener('loadedmetadata', () => {
   if(!video.duration) return;
   remainingTimeLabel.textContent = '-' + formatTime(video.duration);
+  if(!usingLocalFile) titleText.textContent = CLIP.title;
 });
 
 function bindSeek(track, apply){
@@ -513,16 +648,19 @@ muteBtn.addEventListener('click', () => {
   muteBtn.setAttribute('aria-pressed', video.muted ? 'true' : 'false');
 });
 
+// Ketuk area video untuk play/pause, tapi jangan saat menekan kontrol.
 document.getElementById('screen').addEventListener('click', (e) => {
-  if(e.target.closest('.upload-overlay')) return;
-  playPauseBtn.click();
+  if(e.target.closest('.veil') || e.target.closest('.buffering')) return;
+  togglePlay();
 });
 
 const field = document.getElementById('field');
 const faunaImgs = ['./assets/images/3.png', './assets/images/5.png', './assets/images/6.png'];
 function rand(min, max){ return Math.random() * (max - min) + min; }
 
-for(let i = 0; i < 16; i++){
+// Jumlah dekorasi sengaja dikecilkan (dari 38 -> 17): ini sumber utama
+// lag di HP karena semuanya fixed + beranimasi menumpuk di atas video.
+for(let i = 0; i < 7; i++){
   const b = document.createElement('div');
   b.className = 'bubble';
   const size = rand(6, 18);
@@ -534,7 +672,7 @@ for(let i = 0; i < 16; i++){
   field.appendChild(b);
 }
 
-for(let i = 0; i < 4; i++){
+for(let i = 0; i < 2; i++){
   const d = document.createElement('img');
   d.className = 'drifter';
   d.src = faunaImgs[i % faunaImgs.length];
@@ -546,7 +684,7 @@ for(let i = 0; i < 4; i++){
   field.appendChild(d);
 }
 
-for(let i = 0; i < 18; i++){
+for(let i = 0; i < 8; i++){
   const s = document.createElement('div');
   s.className = 'spark';
   s.style.left = rand(0, 100) + 'vw';
@@ -556,7 +694,18 @@ for(let i = 0; i < 18; i++){
   field.appendChild(s);
 }
 
-init();
+// Gate video detached (dulu: membuat elemen video sementara yang tidak
+// menempel di DOM) sudah dihapus. iOS Safari tidak memuat media
+// element yang tidak terpasang, jadi loadClip() tidak pernah terpanggil
+// dan video tidak bisa diputar. Sekarang src-nya langsung ada di markup,
+// kita hanya menunggu event-nya.
+titleText.textContent = CLIP.title;
+showVeil('loading', 'memuat video\u2026');
+if(video.readyState >= 1){
+  showVeil('ready');
+  remainingTimeLabel.textContent = '-' + formatTime(video.duration);
+}
+video.load();
 </script>
 </body>
 </html>
