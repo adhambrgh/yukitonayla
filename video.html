@@ -267,6 +267,31 @@
     font-family:'Caveat', cursive; font-size:19px; font-weight:600; color:var(--gold);
   }
 
+  /* Tombol "lanjut" untuk pindah ke halaman penutup. Taruh sebagai anak
+     langsung <body> dengan margin-top:auto supaya nempel di tengah bawah
+     halaman. Di layar pendek yang tidak ada ruang sisa, auto ini jadi nol
+     dan tombol tetap mengalir normal, jadi tidak pernah terpotong. */
+  .next-bottom{
+    position:relative; z-index:3;
+    display:flex; align-items:center; justify-content:center;
+    width:100%; max-width:340px;
+    margin:auto 0 0; padding-top:20px;
+  }
+  .next-bottom a{
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    padding:13px 28px; border-radius:999px; text-decoration:none;
+    font-family:'Quicksand', sans-serif; font-size:14px; font-weight:700;
+    white-space:nowrap;
+    background:linear-gradient(135deg, var(--ocean-bright) 0%, var(--ocean-mid) 100%);
+    color:#fff; border:1px solid rgba(202,240,248,.22);
+    box-shadow:0 10px 20px -12px rgba(0,0,0,.6);
+    transition:filter .18s ease, transform .15s ease;
+  }
+  .next-bottom a:hover{ filter:brightness(1.1); transform:translateY(-2px); }
+  .next-bottom a:active{ transform:translateY(0); }
+  .next-bottom a:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:3px; }
+  .next-bottom svg{ width:15px; height:15px; flex-shrink:0; }
+
   .ctrl-btn:focus-visible,
   .vol-icon:focus-within,
   .title:focus-visible{
@@ -275,6 +300,7 @@
 
   @media (max-width:380px){
     .stage{ max-width:300px; }
+    .next-bottom{ max-width:300px; }
     .deco.d1,.deco.d4{ width:48px; }
     .deco.d2,.deco.d3{ width:40px; }
     .deco.d5{ display:none; }
@@ -282,7 +308,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .bubble,.drifter,.spark,.deco,.drip{ animation:none!important; }
-    .ctrl-btn,.title{ transition:none!important; }
+    .ctrl-btn,.title,.next-bottom a{ transition:none!important; }
   }
 </style>
 </head>
@@ -366,6 +392,10 @@
 
   <p class="caption">momen-momen yang aku simpan buat kamu</p>
 </main>
+
+<nav class="next-bottom" aria-label="Navigasi halaman">
+  <a href="closing.html">lanjut<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a>
+</nav>
 
 <script>
 const CLIP = {
