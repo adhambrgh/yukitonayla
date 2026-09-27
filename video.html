@@ -307,11 +307,6 @@
              autoplay muted playsinline webkit-playsinline disablepictureinpicture
              src="./assets/videos/momen-kita.mp4"></video>
 
-      <!-- Audio bawaan video ini praktis sunyi, jadi dibuang saja dan
-           diganti lagu di bawah. Musik ikut dijeda kalau video dijeda. -->
-      <audio id="music" loop preload="auto"
-             src="./assets/music/Backstreet%20Boys%20-%20Shape%20of%20My%20Heart%20(Lyrics).mp3"></audio>
-
       <div class="buffering" id="buffering"><div class="spinner"></div></div>
 
       <div class="veil" id="veil">
@@ -400,11 +395,8 @@ const volumeTrack = document.getElementById('volumeTrack');
 const volumeFill = document.getElementById('volumeFill');
 const volumeThumb = document.getElementById('volumeThumb');
 const muteBtn = document.getElementById('muteBtn');
-const music = document.getElementById('music');
 
-// Lagu ini vokal, jadi jangan full volume supaya tetap terasa seperti latar.
-const MUSIC_DEFAULT = 0.5;
-let lastVolume = MUSIC_DEFAULT;
+let lastVolume = 1;
 
 function formatTime(sec){
   if(!isFinite(sec) || sec < 0) sec = 0;
@@ -414,66 +406,38 @@ function formatTime(sec){
 }
 
 /* ---- Autoplay ----
-   Audio bawaan video dibuang, jadi video selalu dibisukan. Autoplay-nya
-   pindah ke elemen musik, yang ikut aturan yang sama: coba bersuara
-   dulu, kalau browser menolak mundur ke bisu. Slider volume dan tombol
-   speaker di bawah kini mengatur musik, bukan video. */
+   Browser hanya mengizinkan autoplay bersuara kalau pengguna sudah
+   pernah berinteraksi dengan domain ini. Kalau percobaan bersuara
+   ditolak, kita mundur ke autoplay bisu supaya video tetap jalan.
+   Suara bisa dinyalakan lewat kontrol volume di bawah. Tombol
+   play/pause tetap normal, jadi video tetap bisa dijeda dan diulang. */
 function syncVolumeUI(){
-  const shown = (music.muted || music.volume === 0) ? 0 : music.volume;
+  const shown = (video.muted || video.volume === 0) ? 0 : video.volume;
   volumeFill.style.width = (shown * 100) + '%';
   volumeThumb.style.left = (shown * 100) + '%';
   volumeTrack.setAttribute('aria-valuenow', Math.round(shown * 100));
   muteBtn.setAttribute('aria-pressed', shown === 0 ? 'true' : 'false');
 }
 
-// Mainkan satu elemen, dan kalau browser tidak mengizinkan bersuara,
-// bisukan lalu coba lagi dalam mode bisu (yang selalu diizinkan).
-// Dipakai untuk video maupun musik.
-function playWithFallback(media){
-  let p, threw = false;
-  try { p = media.play(); } catch(e){ p = null; threw = true; }
-
-  if(threw){
-    // play() gagal mendadak: media belum jalan sama sekali.
-    media.muted = true;
-    let q;
-    try { q = media.play(); } catch(e){ q = null; }
-    if(q && q.catch) q.catch(() => {});
-    return null;
-  }
-
-  if(p && p.catch){
-    // Ditolak kebijakan autoplay: mundur ke mode bisu.
-    return p.catch(() => {
-      media.muted = true;
-      let q;
-      try { q = media.play(); } catch(e){ q = null; }
-      if(q && q.catch) q.catch(() => {});
-    });
-  }
-
-  // play() tanpa promise (browser lama): media dianggap sudah jalan.
-  return null;
-}
-
-function startMusic(){
-  if(!music) return;
-  const done = playWithFallback(music);
-  if(done && done.then) done.then(() => syncVolumeUI()).catch(() => {});
-}
-
 function attemptAutoplay(){
-  // Video dibisukan total karena suaranya sudah diganti lagu.
-  video.muted = true;
-  playWithFallback(video);
-
-  // Musik: coba bersuara, lalu mundur ke bisu kalau ditolak.
-  if(!music) return;
-  music.volume = MUSIC_DEFAULT;
-  music.muted = false;
-  const done = playWithFallback(music);
-  if(done && done.then) done.then(() => syncVolumeUI()).catch(() => {});
-  syncVolumeUI();
+  // Coba dulu dengan suara. Kalau pengguna sampai ke sini lewat
+  // klik navigasi, interaksinya sering sudah dihitung browser.
+  video.muted = false;
+  let p;
+  try { p = video.play(); } catch(e){ p = null; }
+  if(p && p.catch){
+    p.catch(() => {
+      // Ditolak kebijakan autoplay: mundur ke mode bisu.
+      video.muted = true;
+      let q;
+      try { q = video.play(); } catch(e){ q = null; }
+      if(q && q.catch) q.catch(() => {});
+      syncVolumeUI();
+    });
+  } else if(!p){
+    video.muted = true;
+    syncVolumeUI();
+  }
 }
 
 /* veilMsg hanya dipakai untuk pesan error. Teks "memuat video..." sengaja
@@ -529,16 +493,14 @@ video.addEventListener('play', () => {
   showVeil('none');
   showBuffering(false);
   document.body.classList.add('is-playing');
-  startMusic();
 });
 
 video.addEventListener('pause', () => {
   playIcon.style.display = '';
   pauseIcon.style.display = 'none';
   document.body.classList.remove('is-playing');
-  // Setelah pernah jalan, tombol putar besar tidak muncul lagi saat dijeda.
+  // Setelah pernah Jalan, tombol putar besar tidak muncul lagi saat dijeda.
   if(video.currentTime > 0 && video.readyState >= 2) showVeil('none');
-  if(music) music.pause();
 });
 
 video.addEventListener('waiting', () => showBuffering(true));
@@ -551,11 +513,7 @@ video.addEventListener('ended', () => {
   showVeil('ready');
   playIcon.style.display = '';
   pauseIcon.style.display = 'none';
-  if(music) music.pause();
 });
-
-// Kalau musiknya gagal muat, videonya tetap harus jalan normal.
-if(music) music.addEventListener('error', () => { music.muted = true; });
 
 rewindBtn.addEventListener('click', () => { video.currentTime = Math.max(0, video.currentTime - 10); });
 forwardBtn.addEventListener('click', () => {
@@ -600,26 +558,28 @@ function bindSeek(track, apply){
 
 bindSeek(progressTrack, (ratio) => { if(video.duration) video.currentTime = ratio * video.duration; });
 bindSeek(volumeTrack, (ratio) => {
-  music.volume = ratio;
+  video.volume = ratio;
   if(ratio > 0) lastVolume = ratio;
-  music.muted = ratio === 0;
-  syncVolumeUI();
+  volumeFill.style.width = (ratio * 100) + '%';
+  volumeThumb.style.left = (ratio * 100) + '%';
+  volumeTrack.setAttribute('aria-valuenow', Math.round(ratio * 100));
+  muteBtn.setAttribute('aria-pressed', ratio === 0 ? 'true' : 'false');
+  video.muted = ratio === 0;
 });
 
-video.muted = true;
-music.volume = MUSIC_DEFAULT;
-music.muted = false;
+video.volume = 1;
+video.muted = false;
 syncVolumeUI();
 
 muteBtn.addEventListener('click', () => {
-  if(music.muted || music.volume === 0){
-    music.muted = false;
-    music.volume = lastVolume || MUSIC_DEFAULT;
-    lastVolume = music.volume;
+  if(video.muted || video.volume === 0){
+    video.muted = false;
+    video.volume = lastVolume || 1;
+    lastVolume = video.volume;
   } else {
-    lastVolume = music.volume;
-    music.muted = true;
-    music.volume = 0;
+    lastVolume = video.volume;
+    video.muted = true;
+    video.volume = 0;
   }
   syncVolumeUI();
 });
@@ -683,10 +643,9 @@ if(video.readyState >= 1){
 }
 video.load();
 
-// Mulai langsung begitu halaman dibuka. Videonya selalu bisu karena
-// suaranya digantikan lagu; lagulah yang coba main bersuara dulu, dan
-// kalau browser menolak lalu mundur ke bisu. Tombol play/pause tetap
-// bekerja seperti biasa, jadi video tetap bisa dijeda dan diulang.
+// Mulai langsung begitu halaman dibuka. Coba bersuara dulu, kalau
+// browser menolak lalu mundur ke bisu. Tombol play/pause tetap bekerja
+// seperti biasa, jadi video tetap bisa dijeda dan diulang.
 attemptAutoplay();
 </script>
 </body>

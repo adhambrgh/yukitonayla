@@ -301,7 +301,7 @@
 
 <iframe id="stage" title="isi surat" src="about:blank"></iframe>
 
-<audio id="music" loop preload="none" src="./assets/music/The%201975%20-%20About%20You%20(Official).mp3"></audio>
+<audio id="music" loop preload="none" src="./assets/music/Backstreet%20Boys%20-%20Shape%20of%20My%20Heart%20(Lyrics).mp3"></audio>
 
 <p class="music-hint" id="musicHint">musiknya belum jalan? ketuk di sini</p>
 
@@ -331,7 +331,8 @@ function showMusicHint(){
 function startMusic(){
   if(!IS_SHELL || musicStarted) return;
   musicStarted = true;
-  music.volume = 0.6;
+  // Lagunya vokal, jadi jangan terlalu keras biar tetap jadi latar.
+  music.volume = 0.5;
   music.currentTime = 0;
   const attempt = music.play();
   if(attempt && attempt.catch) attempt.catch(showMusicHint);
