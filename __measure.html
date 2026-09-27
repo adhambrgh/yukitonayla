@@ -1,0 +1,145 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>body{margin:0;font:12px monospace;background:#111;color:#eee}iframe{border:0;width:390px;height:640px}</style>
+</head><body>
+<div id="tag">-</div>
+<iframe id="fr"></iframe>
+<pre id="OUT">menunggu...</pre>
+<script>
+var params = new URLSearchParams(location.search);
+var page = params.get('p') || 'index.html';
+document.getElementById('tag').textContent = 'mengukur: ' + page;
+
+var fr = document.getElementById('fr');
+var marks = {};
+var longTasks = [];
+var typing = false;
+var reported = false;
+
+// hitung elemen yang benar-benar sedang beranimasi.
+// CATATAN: offsetParent bernilai null untuk position:fixed, jadi
+// jangan dipakai sebagai penentu visibilitas.
+function countRunning(doc, win){
+  var n = 0, all;
+  try{ all = doc.querySelectorAll('*'); }catch(e){ return -1; }
+  for(var i = 0; i < all.length; i++){
+    var el = all[i];
+    try{
+      var cs = win.getComputedStyle(el);
+      if(!cs.animationName || cs.animationName === 'none') continue;
+      if(cs.animationPlayState === 'paused') continue;
+      if(cs.display === 'none' || cs.visibility === 'hidden') continue;
+      n++;
+    }catch(e){}
+  }
+  return n;
+}
+
+function countBlurring(doc, win){
+  var n = 0, all;
+  try{ all = doc.querySelectorAll('*'); }catch(e){ return -1; }
+  for(var i = 0; i < all.length; i++){
+    try{
+      var cs = win.getComputedStyle(all[i]);
+      var bf = cs.backdropFilter || cs.webkitBackdropFilter;
+      if(bf && bf !== 'none') n++;
+    }catch(e){}
+  }
+  return n;
+}
+
+function report(reason){
+  if(reported) return;
+  reported = true;
+
+  var animAfter = -1, blurAfter = -1, destUrl = '?';
+  try{
+    var w = fr.contentWindow, d = fr.contentDocument;
+    if(d && d.body) animAfter = countRunning(d, w);
+    if(d && d.body) blurAfter = countBlurring(d, w);
+    destUrl = String(w.location.pathname).split('/').pop();
+  }catch(e){}
+
+  var lt = longTasks.filter(function(t){ return t.start - marks.t0 > -100; });
+  var totLT = lt.reduce(function(a, t){ return a + t.dur; }, 0);
+
+  var L = [
+    'PAGE                = ' + page,
+    'DESTINASI           = ' + destUrl,
+    'alasan selesai       = ' + reason,
+    'animasi sebelum ketik= ' + marks.animBefore,
+    'animasi saat transisi= ' + marks.animDuring,
+    'animasi sesudahnya   = ' + animAfter,
+    'backdrop-blur akhir  = ' + blurAfter,
+    'durasi transisi (ms) = ' + marks.navMs,
+    'jeda tetap (ms)      = ' + (marks.navMs != null && marks.animBeforeAtT0 != null ? (marks.navMs - marks.animBeforeAtT0) : '?'),
+    'long task count     = ' + lt.length,
+    'long task total (ms)= ' + totLT
+  ];
+  var out = document.getElementById('OUT');
+  out.textContent = L.join('\n');
+  var o = document.createElement('div');
+  o.id = 'RESULT';
+  o.textContent = L.join(' ~ ');
+  document.body.appendChild(o);
+}
+
+fr.addEventListener('load', function(){
+  var w = fr.contentWindow, d;
+  try{ d = fr.contentDocument; }catch(e){ return; }
+  if(!d) return;
+  if(!d.getElementById('pad')){
+    // ini halaman tujuan, transisi sudah selesai
+    if(marks.t0){
+      marks.navMs = Math.round(performance.now() - marks.t0);
+      report('iframe memuat halaman tujuan');
+    }
+    return;
+  }
+
+  // halaman PIN siap
+  try{
+    var po = new w.PerformanceObserver(function(list){
+      list.getEntries().forEach(function(e){
+        longTasks.push({ start: Math.round(e.startTime), dur: Math.round(e.duration) });
+      });
+    });
+    po.observe({ entryTypes: ['longtask'] });
+  }catch(e){}
+
+  marks.animBefore = countRunning(d, w);
+  marks.blurBefore = countBlurring(d, w);
+
+  // sniff apakah kelas is-leaving dipakai
+  marks.hasIsLeaving = /is-leaving/.test(d.documentElement.innerHTML);
+
+  setTimeout(function(){
+    if(typing || reported) return;
+    typing = true;
+    marks.t0 = performance.now();
+    marks.animBeforeAtT0 = marks.navMs || 0;
+
+    var pin = '280925', i = 0;
+    (function step(){
+      if(i >= pin.length){
+        setTimeout(function(){
+          try{
+            marks.animDuring = countRunning(fr.contentDocument, fr.contentWindow);
+            marks.hasIsLeavingNow = fr.contentDocument.body.classList.contains('is-leaving');
+          }catch(e){}
+          // batas waktu jika halaman tujuan tidak pernah dimuat
+          setTimeout(function(){ report('batas waktu habis'); }, 6000);
+        }, 60);
+        return;
+      }
+      var btn = null;
+      try{ btn = fr.contentDocument.querySelector('.key[data-k="' + pin[i] + '"]'); }catch(e){}
+      if(btn) btn.click();
+      i++;
+      setTimeout(step, 120);
+    })();
+  }, 1000);
+});
+
+fr.src = page;
+setTimeout(function(){ if(!reported) report('batas waktu awal habis'); }, 15000);
+</script></body></html>

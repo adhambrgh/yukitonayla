@@ -1,0 +1,89 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{margin:0;font:12px monospace;background:#111;color:#eee;padding:8px}
+pre{white-space:pre-wrap;margin:2px 0}
+iframe{border:0;width:390px;height:600px;display:block;margin-top:6px}
+</style></head><body>
+<div id="log">measuring...</div>
+<script>
+var pages = ['index.html','love-letter.html','gift.html','scrapbook.html','harapan.html','video.html','closing.html','anniversary.html','thank-you.html'];
+var results = [];
+var i = 0;
+
+function next(){
+  if(i >= pages.length){ finish(); return; }
+  var name = pages[i++];
+  var f = document.createElement('iframe');
+  f.width = 390; f.height = 600;
+  f.style.visibility = 'hidden';
+  var t0 = performance.now();
+  f.onload = function(){
+    var w = f.contentWindow, d = f.contentDocument;
+    var nav = w.performance.getEntriesByType('navigation')[0] || {};
+    var paints = {};
+    try {
+      w.performance.getEntriesByType('paint').forEach(function(p){ paints[p.name] = Math.round(p.startTime); });
+    } catch(e){}
+    setTimeout(function(){
+      // hitung elemen yang sedang beranimasi
+      var animated = 0, fixed = 0, blur = 0, imgs = 0, brokenImg = 0;
+      d.querySelectorAll('*').forEach(function(el){
+        var cs = w.getComputedStyle(el);
+        if(cs.animationName && cs.animationName !== 'none') animated++;
+        if(cs.position === 'fixed') fixed++;
+        if((cs.backdropFilter && cs.backdropFilter !== 'none')) blur++;
+        if(el.tagName === 'IMG'){ imgs++; if(!el.complete || el.naturalWidth === 0) brokenImg++; }
+      });
+      results.push({
+        page: name,
+        domContentLoaded: Math.round(nav.domContentLoadedEventEnd || 0),
+        load: Math.round(nav.loadEventEnd || 0),
+        fcp: paints['first-contentful-paint'] || null,
+        transferKB: Math.round((nav.transferSize||0)/1024),
+        elements: d.querySelectorAll('*').length,
+        animated: animated,
+        fixedPos: fixed,
+        backdropBlur: blur,
+        images: imgs,
+        brokenImages: brokenImg
+      });
+      f.style.visibility = 'hidden';
+      f.remove();
+      next();
+    }, 1500);
+  };
+  f.src = name;
+  document.body.appendChild(f);
+}
+
+function finish(){
+  var lines = [];
+  lines.push('halaman           dom  load   fcp   KB   el  anim fixed blur img rusak');
+  results.forEach(function(r){
+    lines.push(
+      r.page.padEnd(18) +
+      String(r.domContentLoaded).padEnd(5) +
+      String(r.load).padEnd(7) +
+      String(r.fcp).padEnd(6) +
+      String(r.transferKB).padEnd(5) +
+      String(r.elements).padEnd(4) +
+      String(r.animated).padEnd(5) +
+      String(r.fixedPos).padEnd(6) +
+      String(r.backdropBlur).padEnd(5) +
+      String(r.images).padEnd(4) +
+      String(r.brokenImages)
+    );
+  });
+  var totAnim = results.reduce(function(a,r){return a+r.animated;},0);
+  var totBrk  = results.reduce(function(a,r){return a+r.brokenImages;},0);
+  var totBlur = results.reduce(function(a,r){return a+r.backdropBlur;},0);
+  lines.push('');
+  lines.push('TOTAL animasi aktif : ' + totAnim);
+  lines.push('TOTAL backdrop-blur : ' + totBlur);
+  lines.push('TOTAL gambar rusak  : ' + totBrk);
+  var d = document.createElement('div');
+  d.id = 'PERF';
+  d.textContent = lines.join(' || ');
+  document.body.appendChild(d);
+}
+next();
+</script></body></html>

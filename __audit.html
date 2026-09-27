@@ -1,0 +1,91 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>body{margin:0;font:11px monospace;background:#111;color:#eee}iframe{border:0;width:390px;height:640px}</style>
+</head><body>
+<div id="tag">-</div>
+<iframe id="fr"></iframe>
+<pre id="OUT">menunggu...</pre>
+<script>
+// Harness audit: cek error console, gambar rusak, dan elemen kosong
+// untuk setiap halaman. Dipakai lewat ?p=namafile.html
+var params = new URLSearchParams(location.search);
+var page = params.get('p') || 'index.html';
+document.getElementById('tag').textContent = 'audit: ' + page;
+
+var fr = document.getElementById('fr');
+var errs = [], warns = [], failedReq = [];
+var done = false;
+
+function report(why){
+  if(done) return; done = true;
+  var st = {};
+  try{
+    var w = fr.contentWindow, d = fr.contentDocument;
+    var all = d.querySelectorAll('*');
+    st.elemen = all.length;
+    var animNamed = 0, animVisible = 0, imgs = 0, brokenImg = 0, altMissing = 0;
+    for(var i = 0; i < all.length; i++){
+      var el = all[i], cs = w.getComputedStyle(el);
+      if(cs.animationName && cs.animationName !== 'none'){
+        animNamed++;
+        if(cs.display !== 'none' && cs.visibility !== 'hidden' && cs.animationPlayState !== 'paused') animVisible++;
+      }
+      if(el.tagName === 'IMG'){
+        imgs++;
+        if(!el.complete || el.naturalWidth === 0) brokenImg++;
+        if(!el.alt) altMissing++;
+      }
+    }
+    st.animNamanya = animNamed;
+    st.animTerlihat = animVisible;
+    st.gambar = imgs;
+    st.gambarRusak = brokenImg;
+    st.imgTanpaAlt = altMissing;
+    st.judul = (d.title || '(tanpa <title>)').slice(0, 40);
+    st.adaH1 = d.querySelectorAll('h1').length;
+    st.adaBody = !!d.body;
+  }catch(e){ st.kesalahan = e.message; }
+
+  var L = [
+    'PAGE             = ' + page,
+    'alasan           = ' + why,
+    'judul            = ' + st.judul,
+    'elemen           = ' + st.elemen,
+    'h1               = ' + st.adaH1,
+    'anim (nama)      = ' + st.animNamanya,
+    'anim (terlihat)  = ' + st.animTerlihat,
+    'gambar           = ' + st.gambar,
+    'GAMBAR RUSAK     = ' + st.gambarRusak,
+    'img tanpa alt    = ' + st.imgTanpaAlt,
+    'ERROR CONSOLE    = ' + (errs.length ? errs.join(' ;; ') : 'tidak ada'),
+    'resource gagal   = ' + (failedReq.length ? failedReq.join(' ;; ') : 'tidak ada')
+  ];
+  document.getElementById('OUT').textContent = L.join('\n');
+  var o = document.createElement('div');
+  o.id = 'RESULT';
+  o.textContent = L.join(' ~ ');
+  document.body.appendChild(o);
+}
+
+fr.addEventListener('load', function(){
+  var w, d;
+  try{ w = fr.contentWindow; d = fr.contentDocument; }catch(e){ return; }
+  if(!w || !d) return;
+
+  // pasang penangkap error SEBELUM halaman sempat jalan:
+  // karena script halaman jalan saat load, sebagian error mungkin lolos.
+  try{
+    w.addEventListener('error', function(e){
+      if(e && e.target && e.target !== w) failedReq.push((e.target.src || e.target.href || '?') + ' [' + (e.type||'') + ']');
+      else errs.push(String((e && e.message) || e));
+    }, true);
+    w.addEventListener('unhandledrejection', function(e){
+      errs.push('unhandledrejection: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+    });
+  }catch(e){}
+
+  setTimeout(function(){ report('selesai setelah 2500ms'); }, 2500);
+});
+
+fr.src = page;
+setTimeout(function(){ if(!done) report('batas waktu 9 detik'); }, 9000);
+</script></body></html>

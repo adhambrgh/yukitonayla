@@ -4,9 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Surat Anniversary Untukmu</title>
+<!-- Font dimuat lewat <link> + preconnect, bukan @import di dalam CSS.
+     @import membuat browser menunggu berkas CSS selesai diunduh dulu
+     baru meminta font, sehingga font menjadi permintaan berurutan dan
+     render halaman tertahan. Dengan <link>, font diambil paralel
+     bersama aset lain sehingga halaman bisa tampil lebih dulu. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
-
   :root{
     --ocean-deep:#00416B;
     --ocean-mid:#0077B6;
@@ -258,7 +264,7 @@
 const START_DATE = "2023-01-01";
 const LETTER_PARAGRAPHS = [
   "ini ucapan dari akuuu sayanggg💝,",
-  "selamattt kita uda 1 tahun ngejalin hubungan inii, waktunya gaa singkatt, dan momennya gaa sedikit, banyakk banget senengnya, ada juga sedihnya, berantemnya, dan lainnya, aku gapake kata formal ato tulisan″ yang ditata sedemikian rupa, disini aku mengampaikan perasaanku, dan walau web ini bukan buatanku aku harap kata″ ini cukup mewakili cerita hubungan kita selamaaaa SATUUU TAHUNNN INIIIIII❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥, sayanggg,",
+  "selamattt kita uda 1 tahun ngejalin hubungan inii, waktunya gaa singkatt, dan momennya gaa sedikit, banyakk banget senengnya, ada juga sedihnya, berantemnya, dan lainnya, aku gapake kata formal ato tulisan″ yang ditata sedemikian rupa, disini aku mengampaikan perasaanku, dan walau web ini bukan buatanku aku harap kata″ ini cukup mewakili cerita hubungan kita selamaaaa SATUUU TAHUNNN INIIIIII❤️🔥❤️🔥❤️🔥❤️🔥, sayanggg,",
   "aku mau mengenang dari kita pertama ketemu, waktu aku jadi ketua kelas, dan kamu sekertaris, masa yang gaperna terfikir bakal ada di titik inii, kemudian kita didekatan dengan pertemuan di gazebo waktu melajarin tugasnya pak rasyid, disitu aku ngerti mantan kamu, dan hari″ selanjutnya diisi cemburu tipis yang aneh waktu kamu deket ini deket itu, dan aku nyaman didekat kamu ketika jailnya kamuu ke akuu, imutnya kamuu, dan semakin lama aku bareng kamu aku nemuin semua yang aku bayangin dengan wujud kamuu, cewe yang jaill, yang pinter, yang sayang, yang ceria, baik, suka memberi ke orang tida mampu, ngambekan, marah yang lucu, cengeng, cerewet, cantikk🥰 dann masih banyak lagii, bahkan kamu sempurna dimataku,",
   "terus kita slalu gatelat chatan, crita hari″ kita, jalan sini jalan situ, bareng kesini bareng kesitu, chat yang makin asik makin lucu, sayang itu muncul, cinta itu muncul, dan perasaan itu terus bertambah, aku gabisa pastiin kapan perasaan itu bener″ harus disampain,",
   "jujur aku orang jarang keluar, gaterlalu up date, gatau, ga ngerasain, ga coba/ gabisa coba, dan ga ngikutin apa yang ada, aku bener″ gatau dunia luar gimana cara berhubungan, gimana menembak, menyatakan perasaan yang bisa begitu berkesan, effort, bahkan aku gatau apa itu effort, gimana itu effort, aku cuman tau pacaran cuman ngomong mau ga jadi pacarku, kemudian ketika pacaran pulang sekolah pulang, dirumah chatan panjang lebar malem vc/call, disekolah bisa deket bisa ngobrol bisa jajan bareng, ternyata aku salahh, banyak yang harus dilakuin, aku gaa sesiap itu, aku minta maaff kalo sejauh ini, oiya, yang selama ini aku kasih, itu hal yang susah aku dapetin, kalo suatu saat kamu ngerasa itu hal kecil, itu emang hal kecil buat kamu tapi gakecil buat aku,",
@@ -324,20 +330,17 @@ function typeParagraph(index){
   function tick(){
     if(stopped) return;
     if(i < text.length){
-      const typed = text[i];
-      caret.insertAdjacentText('beforebegin', typed);
+      caret.insertAdjacentText('beforebegin', text[i]);
       i++;
-      /* Jeda dibikin lambat dan tidak rata, biar kesan mesin tik-nya
-         kelihatan. Jeda dipasang SESUDAH huruf yang diketik, bukan
-         sesudahnya, jadi mengetik mengikuti ritme baca. */
-      let wait = 24 + Math.random() * 18;
-      if('.!?'.indexOf(typed) !== -1) wait += 260;
-      else if(',;:'.indexOf(typed) !== -1) wait += 130;
-      if(i % 10 === 0) wait += 30;
+      /* Jeda antar huruf dibikin tetap lambat dan tidak rata, biar
+         kesan mesin tiknya kelihatan, bukan teks yang melompat. */
+      let wait = 30 + Math.random() * 26;
+      if(' ,.!?;:'.indexOf(text[i]) !== -1) wait += 190;   // jeda setelah tanda baca
+      if(i % 7 === 0) wait += 40;                          // jeda napas kecil
       setTimeout(tick, wait);
     } else {
       caret.classList.add('done');
-      setTimeout(() => typeParagraph(index + 1), 700);
+      setTimeout(() => typeParagraph(index + 1), 780);
     }
   }
   tick();

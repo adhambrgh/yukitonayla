@@ -4,8 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Udah Siap Belom Sama Kadonya?</title>
+<!-- Font dimuat lewat <link> + preconnect, bukan @import di dalam CSS.
+     @import membuat browser menunggu berkas CSS selesai diunduh dulu
+     baru meminta font, sehingga font menjadi permintaan berurutan dan
+     render halaman tertahan. Dengan <link>, font diambil paralel
+     bersama aset lain sehingga halaman bisa tampil lebih dulu. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
 
   :root{
     --ocean-deep:#00416B;
