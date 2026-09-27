@@ -24,8 +24,8 @@
   *{ box-sizing:border-box; }
   html,body{ margin:0; padding:0; }
 
-  /* flex-direction WAJIB column: tanpa itu .topnav dan .stage jadi anak
-     flex row sehingga video terperas (ditemukan lewat pengukuran geometri). */
+  /* flex-direction WAJIB column: tanpa itu anak-anak flex akan tersusun
+     berdampingan sehingga .stage terperas (ditemukan lewat pengukuran geometri). */
   body{
     min-height:100vh; position:relative; overflow-x:hidden;
     display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
@@ -77,28 +77,6 @@
     filter:drop-shadow(0 10px 18px rgba(0,30,70,.35));
   }
   .deco img{ display:block; width:100%; height:auto; }
-
-  /* Nav persisten: selalu terjangkau tanpa scroll, ini yang bikin
-     "tidak bisa ke halaman selanjutnya" hilang. */
-  .topnav{
-    position:sticky; top:0; z-index:20;
-    display:flex; align-items:center; justify-content:flex-end; gap:8px;
-    width:100%; max-width:420px; margin:0 auto 14px; padding:7px 8px;
-    background:rgba(4,32,58,.72); border:1px solid rgba(202,240,248,.18);
-    border-radius:999px; backdrop-filter:blur(6px);
-  }
-  .topnav a{
-    display:flex; align-items:center; gap:5px; min-width:0;
-    padding:8px 16px; border-radius:999px; text-decoration:none;
-    font-size:13px; font-weight:700; white-space:nowrap;
-    background:linear-gradient(135deg, var(--ocean-bright) 0%, var(--ocean-mid) 100%);
-    color:#fff; border:1px solid rgba(202,240,248,.22);
-    box-shadow:0 8px 16px -12px rgba(0,0,0,.6);
-    transition:filter .18s ease, transform .15s ease;
-  }
-  .topnav a:hover{ filter:brightness(1.1); transform:translateY(-1px); }
-  .topnav a:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:2px; }
-  .topnav svg{ width:15px; height:15px; flex-shrink:0; }
 
   /* Hemat sumber daya saat video diputar: matikan semua dekorasi
      yang sebelumnya bikin lag di HP. */
@@ -199,16 +177,6 @@
   }
   .buffering.on{ display:flex; }
 
-  .upload-btn{
-    display:block; margin:10px auto 0; padding:8px 14px;
-    background:none; border:1px solid rgba(202,240,248,.28); border-radius:999px;
-    color:rgba(202,240,248,.7); font-family:'Quicksand', sans-serif;
-    font-size:11.5px; font-weight:600; letter-spacing:.06em; cursor:pointer;
-    transition:background .2s ease, color .2s ease;
-  }
-  .upload-btn:hover{ background:rgba(72,202,228,.18); color:var(--ocean-pale); }
-  .upload-btn:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:2px; }
-
   .title{
     margin:0 0 12px; min-height:1.4em;
     font-family:'Caveat', cursive; font-weight:700; font-size:24px; line-height:1.3;
@@ -300,7 +268,6 @@
   }
   .ctrl-btn:focus-visible,
   .vol-icon:focus-within,
-  .upload-btn:focus-visible,
   .title:focus-visible{
     outline:3px solid rgba(255,201,143,.9); outline-offset:3px;
   }
@@ -314,17 +281,13 @@
 
   @media (prefers-reduced-motion: reduce){
     .bubble,.drifter,.spark,.deco,.drip{ animation:none!important; }
-    .topnav a,.ctrl-btn,.upload-btn,.title{ transition:none!important; }
+    .ctrl-btn,.title{ transition:none!important; }
   }
 </style>
 </head>
 <body>
 <div class="ocean-rays"></div>
 <div class="field" id="field"></div>
-
-<nav class="topnav" aria-label="Navigasi halaman">
-  <a class="next" href="closing.html">lanjut<span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
-</nav>
 
 <img class="deco d1" src="./assets/images/5.png" alt="">
 <img class="deco d2" src="./assets/images/4.png" alt="">
@@ -388,9 +351,6 @@
         <div class="volume-thumb" id="volumeThumb"></div>
       </div>
     </div>
-
-    <button class="upload-btn" id="pickBtn" type="button">pilih video dari hp</button>
-    <input type="file" id="fileInput" accept="video/*" hidden>
   </div>
 
   <div class="drips" aria-hidden="true">
@@ -467,21 +427,7 @@ function showBuffering(on){
    pesan + tombol coba lagi, karena itu yang bikin video terasa rusak. */
 function handleMediaError(){
   showBuffering(false);
-  if(usingLocalFile){
-    showVeil('error', 'video dari hp gagal dimuat. coba pilih ulang.');
-  } else {
-    showVeil('error', 'video belum bisa dimuat. cek koneksi lalu coba lagi.');
-  }
-}
-
-function loadClip(clip){
-  usingLocalFile = false;
-  titleText.textContent = clip.title;
-  showVeil('loading');
-  video.src = clip.url;
-  video.load();
-  const p = video.play();
-  if(p && p.catch) p.catch(() => {});
+  showVeil('error', 'video belum bisa dimuat. cek koneksi lalu coba lagi.');
 }
 
 retryBtn.addEventListener('click', () => {
@@ -492,20 +438,6 @@ retryBtn.addEventListener('click', () => {
 });
 
 playFab.addEventListener('click', () => {
-  const p = video.play();
-  if(p && p.catch) p.catch(() => {});
-});
-
-pickBtn.addEventListener('click', () => fileInput.click());
-
-fileInput.addEventListener('change', () => {
-  const file = (fileInput.files || [])[0];
-  if(!file) return;
-  usingLocalFile = true;
-  titleText.textContent = file.name.replace(/\.[^.]+$/, '');
-  showVeil('loading');
-  video.src = URL.createObjectURL(file);
-  video.load();
   const p = video.play();
   if(p && p.catch) p.catch(() => {});
 });
