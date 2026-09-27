@@ -58,8 +58,8 @@
   }
 
   .fauna-fish{
-    position:absolute; border-radius:50%; object-fit:cover;
-    filter:drop-shadow(0 6px 12px rgba(0,30,70,.3));
+    position:absolute;
+    filter:drop-shadow(0 4px 10px rgba(0,30,70,.22));
     animation:swim linear infinite;
   }
   @keyframes swim{
@@ -70,7 +70,7 @@
   }
 
   .jelly{
-    position:absolute; object-fit:cover; opacity:.6;
+    position:absolute; opacity:.6;
     animation:jellyRise linear infinite;
   }
   @keyframes jellyRise{
@@ -334,9 +334,8 @@ for(let i = 0; i < 7; i++){
   f.src = faunaImgs[i % faunaImgs.length];
   f.alt = '';
   f.style.top = rand(8, 72) + '%';
-  f.style.width = rand(46, 84) + 'px';
-  f.style.height = f.style.width;
-  f.style.animationDuration = rand(18, 30) + 's';
+f.style.width = rand(46, 84) + 'px';
+f.style.animationDuration = rand(18, 30) + 's';
   f.style.animationDelay = rand(0, 12) + 's';
   field.appendChild(f);
 }
