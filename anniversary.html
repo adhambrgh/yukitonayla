@@ -324,12 +324,20 @@ function typeParagraph(index){
   function tick(){
     if(stopped) return;
     if(i < text.length){
-      caret.insertAdjacentText('beforebegin', text[i]);
+      const typed = text[i];
+      caret.insertAdjacentText('beforebegin', typed);
       i++;
-      setTimeout(tick, 5 + Math.random() * 9);
+      /* Jeda dibikin lambat dan tidak rata, biar kesan mesin tik-nya
+         kelihatan. Jeda dipasang SESUDAH huruf yang diketik, bukan
+         sesudahnya, jadi mengetik mengikuti ritme baca. */
+      let wait = 24 + Math.random() * 18;
+      if('.!?'.indexOf(typed) !== -1) wait += 260;
+      else if(',;:'.indexOf(typed) !== -1) wait += 130;
+      if(i % 10 === 0) wait += 30;
+      setTimeout(tick, wait);
     } else {
       caret.classList.add('done');
-      setTimeout(() => typeParagraph(index + 1), 320);
+      setTimeout(() => typeParagraph(index + 1), 700);
     }
   }
   tick();
