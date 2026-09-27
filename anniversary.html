@@ -282,6 +282,18 @@ function updateCounter(){
 }
 updateCounter();
 
+/* Satu emoji bisa butuh lebih dari satu kode UTF-16: 💝 dan 🥰 itu
+   surrogate pair (2 kode), ❤️ itu emoji + variation selector, dan
+   rangkaian ber-ZWJ seperti 👩‍❤️‍💋‍👨 bisa comprise 11 kode. Kalau
+   teks dipecah per `text[i]`, satu-satu emoji jadi surrogate atau
+   variation selector yang menggantung sendiri dan tampil kotak/kosong.
+   Jadi teks dipecah per grapheme cluster dulu, baru diketik satu-satu. */
+const graphemeSegmenter = ('Segmenter' in Intl) ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+function toTypingUnits(text){
+  if(graphemeSegmenter) return Array.from(graphemeSegmenter.segment(text), (s) => s.segment);
+  return Array.from(text);
+}
+
 const typedArea = document.getElementById('typedArea');
 const signature = document.getElementById('signature');
 const heartEnd = document.getElementById('heartEnd');
@@ -325,17 +337,18 @@ function typeParagraph(index){
   caret.className = 'caret';
   typedArea.appendChild(p);
   p.appendChild(caret);
-  const text = LETTER_PARAGRAPHS[index];
+  const units = toTypingUnits(LETTER_PARAGRAPHS[index]);
   let i = 0;
   function tick(){
     if(stopped) return;
-    if(i < text.length){
-      caret.insertAdjacentText('beforebegin', text[i]);
+    if(i < units.length){
+      const unit = units[i];
+      caret.insertAdjacentText('beforebegin', unit);
       i++;
       /* Jeda antar huruf dibikin tetap lambat dan tidak rata, biar
          kesan mesin tiknya kelihatan, bukan teks yang melompat. */
       let wait = 30 + Math.random() * 26;
-      if(' ,.!?;:'.indexOf(text[i]) !== -1) wait += 190;   // jeda setelah tanda baca
+      if(' ,.!?;:'.indexOf(unit) !== -1) wait += 190;   // jeda setelah tanda baca
       if(i % 7 === 0) wait += 40;                          // jeda napas kecil
       setTimeout(tick, wait);
     } else {
