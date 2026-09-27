@@ -168,17 +168,18 @@
     content:''; display:block; width:64px; height:1px; margin:14px auto 0;
     background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
-  .letter-long .to{ margin-bottom:26px; }
-  .letter-long p{ text-align:justify; hyphens:auto; }
-  .letter-long p.lead::first-letter{
-    font-family:'Baloo 2', sans-serif; font-size:2.8em; line-height:.9;
-    float:left; padding:6px 10px 0 0; color:var(--coral);
-  }
-  .sign-name{ display:inline-block; margin-top:6px; font-size:.82em; letter-spacing:.02em; }
   .letter p{
     margin:0 0 20px; min-height:1.8em;
     font-size:17px; line-height:1.8; color:var(--ink-soft);
+    text-align:justify; hyphens:auto;
   }
+  .skip-hint{
+    margin:0; text-align:center; font-size:12px; letter-spacing:.1em;
+    color:var(--gold); opacity:.85;
+  }
+  .skip-hint[hidden]{ display:none; }
+  #letterCard{ cursor:pointer; }
+  .sign-name{ display:inline-block; margin-top:6px; font-size:.82em; letter-spacing:.02em; }
   .letter .sign{
     margin:26px 0 0; font-size:22px; line-height:1.45; font-weight:700;
     font-style:italic; color:var(--coral);
@@ -240,38 +241,15 @@
 </section>
 
 <section class="letter-section" id="letterSection">
-  <article class="letter">
-    <p class="to">Untuk kamu, di hari anniversary kita,</p>
-    <h2 class="letter-title">Happyy Anniversaryyyy!!!!!💙</h2>
+  <article class="letter" id="letterCard">
+    <h2 class="letter-title">Happyy Anniversaryyyy!!!!!💝</h2>
     <p class="letter-date">28 September</p>
     <div id="typedArea" aria-live="polite"></div>
-    <p class="sign" id="signature">Dengan cinta yang bertambah setiap hari,<br>sayangmu.</p>
+    <p class="sign" id="signature">I LOVE YOU FOREVER WHENEVER 💝💝💝<br><span class="sign-name">Nayla Widodari Ifatannisa.</span></p>
     <div class="heart-end" id="heartEnd" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9C.2 8.8 1.6 5 5.3 5c2 0 3.4 1 4.7 2.7C11.3 6 12.7 5 14.7 5 18.4 5 19.8 8.8 22 12c-2.5 4.4-10 9-10 9z"/></svg>
     </div>
-  </article>
-</section>
-
-<section class="letter-section" id="longLetterSection">
-  <article class="letter letter-long">
-    <p class="to">ini ucapan dari akuuu, sayanggg 💙</p>
-
-    <p class="lead">selamattt kita uda 1 tahun ngejalin hubungan inii, waktunya gaa singkatt, dan momennya gaa sedikit, banyakk banget senengnya, ada juga sedihnya, berantemnya, dan lainnya, aku gapake kata formal ato tulisan″ yang ditata sedemikian rupa, disini aku mengampaikan perasaanku, dan walau web ini bukan buatanku aku harap kata″ ini cukup mewakili cerita hubungan kita selamaaaa SATUUU TAHUNNN INIIIIII❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥, sayanggg,</p>
-
-    <p>aku mau mengenang dari kita pertama ketemu, waktu aku jadi ketua kelas, dan kamu sekertaris, masa yang gaperna terfikir bakal ada di titik inii, kemudian kita didekatan dengan pertemuan di gazebo waktu melajarin tugasnya pak rasyid, disitu aku ngerti mantan kamu, dan hari″ selanjutnya diisi cemburu tipis yang aneh waktu kamu deket ini deket itu, dan aku nyaman didekat kamu ketika jailnya kamuu ke akuu, imutnya kamuu, dan semakin lama aku bareng kamu aku nemuin semua yang aku bayangin dengan wujud kamuu, cewe yang jaill, yang pinter, yang sayang, yang ceria, baik, suka memberi ke orang tida mampu, ngambekan, marah yang lucu, cengeng, cerewet, cantikk🥰 dann masih banyak lagii, bahkan kamu sempurna dimataku,</p>
-
-    <p>terus kita slalu gatelat chatan, crita hari″ kita, jalan sini jalan situ, bareng kesini bareng kesitu, chat yang makin asik makin lucu, sayang itu muncul, cinta itu muncul, dan perasaan itu terus bertambah, aku gabisa pastiin kapan perasaan itu bener″ harus disampain,</p>
-
-    <p>jujur aku orang jarang keluar, gaterlalu up date, gatau, ga ngerasain, ga coba/ gabisa coba, dan ga ngikutin apa yang ada, aku bener″ gatau dunia luar gimana cara berhubungan, gimana menembak, menyatakan perasaan yang bisa begitu berkesan, effort, bahkan aku gatau apa itu effort, gimana itu effort, aku cuman tau pacaran cuman ngomong mau ga jadi pacarku, kemudian ketika pacaran pulang sekolah pulang, dirumah chatan panjang lebar malem vc/call, disekolah bisa deket bisa ngobrol bisa jajan bareng, ternyata aku salahh, banyak yang harus dilakuin, aku gaa sesiap itu, aku minta maaff kalo sejauh ini, oiya, yang selama ini aku kasih, itu hal yang susah aku dapetin, kalo suatu saat kamu ngerasa itu hal kecil, itu emang hal kecil buat kamu tapi gakecil buat aku,</p>
-
-    <p>KEMUDIANNNNN kitaa pacarannnn, banyakkk bangettt effort″ dari kamuu, aku sukaaa dimasakin kamuu, wahh sumpahhh itu masakan″ yang enakkk bangettt, kayak cuman bisa liat di tiktok/tv makanan enak enak ituuu, bahkan makanan yang aku bisa makan yang bukan asli rasanyaa, banyak bangett, kemudiann juga masa sekarang ini, mulai renggang, mulai banyak masalah, berantem, berantem yang uda gawajar, masalah yang dulu gaada jadi ada, masalah yang dulu bisa diredam sekarang ga di redam,</p>
-
-    <p>aku yakin kita pasti bisa ngelewatin ini semua, satu tahun inii, ayo buat perubahan baru bareng barenggg, aku bakal lebihh effortttt, aku bakal usahaaa buat cari uangg, aku gamales lagi belajarr, gamales lagi pelajarin hal″ baru, doa terbaikkkk buattt kitaaaa, semogaa kitaa tetap bersamaa, selalu bersama, sampai kapanpun ituu, kamu dan aku kemarin jodoh, sekarang ngga, besok jodoh dan sampai kapanpun apapun masalahnya hal yang kita anggep gajodoh itu rintangan yang harus kita lewatin, pikiran yang menghalangi kitaaa, I STILL LOVE YOUUU, I LOVE YOUU FOREVER WHENEVER💙💙💙, kamuuu kamuuuu yang slalu aku tunggu slalu aku pikirin dan kamuu, tetepp kamuuuu, MAKASIHHG SAYANGGG 1 TAHUNNYAAAA, kamu berperan banyak di hubungan ini, aku janji, selanjutnya aku yang akan gantiin peran itu,</p>
-
-    <p>ahhhhh hampir lupaaaaa, senyuman manis kamu selalu buat aku bahagia, panggilan dari kamu ngebuat aku senyum, tatapan mata kamu yang penuh sayang, bibir kamu lucu, tangan kamu yang lembut, kamu buat aku terlalu nyaman, kamu nyiptain semua yang gaperna aku bayangin, kamusempurna, kamu cantik, kamu imut, dan kamu sayangg banget sama akuu, inii, makasihhhhhh sayangggggggg, tetap jadi pasanganku yaa☺</p>
-
-    <p class="sign">I LOVE YOU FOREVER WHENEVER 💙💙💙<br><span class="sign-name">Nayla Widodari Ifatannisa.</span></p>
-
+    <p class="skip-hint" id="skipHint">ketuk suratnya untuk langsung tampil semua</p>
     <a class="next-btn" id="nextBtn" href="scrapbook.html">buka scrapbook kita</a>
   </article>
 </section>
@@ -279,11 +257,14 @@
 <script>
 const START_DATE = "2023-01-01";
 const LETTER_PARAGRAPHS = [
-  "Happy anniversary, sayangku. Setiap tahun yang kita lewati bersama selalu punya cerita, dan aku masih menyimpan setiap saat kecil yang pernah kita bagi.",
-  "Dari obrolan ringan sampai tawa yang nggak ada habisnya, aku sadar bahwa kamu bukan cuma orang yang aku suka, tapi rumah yang bikin aku merasa aman.",
-  "Terima kasih sudah jadi partner terbaik, orang yang selalu kupercaya, dan tempat paling tenang buat semua isi hatiku.",
-  "Di hari anniversary ini, aku cuma mau bilang: semoga semua hal baik yang kamu inginkan selalu datang, dan aku selalu ada di sisi kamu.",
-  "I love you, sayang. Terima kasih sudah menjadi bagian terbaik dalam hidupku."
+  "ini ucapan dari akuuu sayanggg💝,",
+  "selamattt kita uda 1 tahun ngejalin hubungan inii, waktunya gaa singkatt, dan momennya gaa sedikit, banyakk banget senengnya, ada juga sedihnya, berantemnya, dan lainnya, aku gapake kata formal ato tulisan″ yang ditata sedemikian rupa, disini aku mengampaikan perasaanku, dan walau web ini bukan buatanku aku harap kata″ ini cukup mewakili cerita hubungan kita selamaaaa SATUUU TAHUNNN INIIIIII❤️‍🔥❤️‍🔥❤️‍🔥❤️‍🔥, sayanggg,",
+  "aku mau mengenang dari kita pertama ketemu, waktu aku jadi ketua kelas, dan kamu sekertaris, masa yang gaperna terfikir bakal ada di titik inii, kemudian kita didekatan dengan pertemuan di gazebo waktu melajarin tugasnya pak rasyid, disitu aku ngerti mantan kamu, dan hari″ selanjutnya diisi cemburu tipis yang aneh waktu kamu deket ini deket itu, dan aku nyaman didekat kamu ketika jailnya kamuu ke akuu, imutnya kamuu, dan semakin lama aku bareng kamu aku nemuin semua yang aku bayangin dengan wujud kamuu, cewe yang jaill, yang pinter, yang sayang, yang ceria, baik, suka memberi ke orang tida mampu, ngambekan, marah yang lucu, cengeng, cerewet, cantikk🥰 dann masih banyak lagii, bahkan kamu sempurna dimataku,",
+  "terus kita slalu gatelat chatan, crita hari″ kita, jalan sini jalan situ, bareng kesini bareng kesitu, chat yang makin asik makin lucu, sayang itu muncul, cinta itu muncul, dan perasaan itu terus bertambah, aku gabisa pastiin kapan perasaan itu bener″ harus disampain,",
+  "jujur aku orang jarang keluar, gaterlalu up date, gatau, ga ngerasain, ga coba/ gabisa coba, dan ga ngikutin apa yang ada, aku bener″ gatau dunia luar gimana cara berhubungan, gimana menembak, menyatakan perasaan yang bisa begitu berkesan, effort, bahkan aku gatau apa itu effort, gimana itu effort, aku cuman tau pacaran cuman ngomong mau ga jadi pacarku, kemudian ketika pacaran pulang sekolah pulang, dirumah chatan panjang lebar malem vc/call, disekolah bisa deket bisa ngobrol bisa jajan bareng, ternyata aku salahh, banyak yang harus dilakuin, aku gaa sesiap itu, aku minta maaff kalo sejauh ini, oiya, yang selama ini aku kasih, itu hal yang susah aku dapetin, kalo suatu saat kamu ngerasa itu hal kecil, itu emang hal kecil buat kamu tapi gakecil buat aku,",
+  "KEMUDIANNNNN kitaa pacarannnn, banyakkk bangettt effort″ dari kamuu, aku sukaaa dimasakin kamuu, wahh sumpahhh itu masakan″ yang enakkk bangettt, kayak cuman bisa liat di tiktok/tv makanan enak enak ituuu, bahkan makanan yang aku bisa makan yang bukan asli rasanyaa, banyak bangett, kemudiann juga masa sekarang ini, mulai renggang, mulai banyak masalah, berantem, berantem yang uda gawajar, masalah yang dulu gaada jadi ada, masalah yang dulu bisa diredam sekarang ga di redam,",
+  "aku yakin kita pasti bisa ngelewatin ini semua, satu tahun inii, ayo buat perubahan baru bareng barenggg, aku bakal lebihh effortttt, aku bakal usahaaa buat cari uangg, aku gamales lagi belajarr, gamales lagi pelajarin hal″ baru, doa terbaikkkk buattt kitaaaa, semogaa kitaa tetap bersamaa, selalu bersama, sampai kapanpun ituu, kamu dan aku kemarin jodoh, sekarang ngga, besok jodoh dan sampai kapanpun apapun masalahnya hal yang kita anggep gajodoh itu rintangan yang harus kita lewatin, pikiran yang menghalangi kitaaa, I STILL LOVE YOUUU, I LOVE YOUU FOREVER WHENEVER💝💝💝, kamuuu kamuuuu yang slalu aku tunggu slalu aku pikirin dan kamuu, tetepp kamuuuu, MAKASIHHG SAYANGGG 1 TAHUNNYAAAA, kamu berperan banyak di hubungan ini, aku janji, selanjutnya aku yang akan gantiin peran itu,",
+  "ahhhhh hampir lupaaaaa, senyuman manis kamu selalu buat aku bahagia, panggilan dari kamu ngebuat aku senyum, tatapan mata kamu yang penuh sayang, bibir kamu lucu, tangan kamu yang lembut, kamu buat aku terlalu nyaman, kamu nyiptain semua yang gaperna aku bayangin, kamusempurna, kamu cantik, kamu imut, dan kamu sayangg banget sama akuu, inii, makasihhhhhh sayangggggggg, tetap jadi pasanganku yaa☺"
 ];
 
 const counterEl = document.getElementById('counterText');
@@ -299,14 +280,38 @@ const typedArea = document.getElementById('typedArea');
 const signature = document.getElementById('signature');
 const heartEnd = document.getElementById('heartEnd');
 const nextBtn = document.getElementById('nextBtn');
+const letterCard = document.getElementById('letterCard');
+const skipHint = document.getElementById('skipHint');
 let started = false;
+let stopped = false;
+
+/* Surat ini panjang, sekitar 4.2k karakter. Mengetik semua dari awal
+   akan memakan waktu lama, jadi dua hal: ketuk untuk langsung tampil
+   semua, dan kecepatan ketik dipercepat. */
+function finishLetter(){
+  if(stopped) return;
+  stopped = true;
+  typedArea.textContent = '';
+  LETTER_PARAGRAPHS.forEach((text) => {
+    const p = document.createElement('p');
+    p.textContent = text;
+    typedArea.appendChild(p);
+  });
+  signature.style.transition = 'opacity .5s ease';
+  signature.style.opacity = 1;
+  heartEnd.classList.add('show');
+  nextBtn.classList.add('ready');
+  if(skipHint) skipHint.hidden = true;
+}
 
 function typeParagraph(index){
+  if(stopped) return;
   if(index >= LETTER_PARAGRAPHS.length){
     signature.style.transition = 'opacity 1s ease';
     signature.style.opacity = 1;
     heartEnd.classList.add('show');
     nextBtn.classList.add('ready');
+    if(skipHint) skipHint.hidden = true;
     return;
   }
   const p = document.createElement('p');
@@ -317,16 +322,28 @@ function typeParagraph(index){
   const text = LETTER_PARAGRAPHS[index];
   let i = 0;
   function tick(){
+    if(stopped) return;
     if(i < text.length){
       caret.insertAdjacentText('beforebegin', text[i]);
       i++;
-      setTimeout(tick, 26 + Math.random() * 22);
+      setTimeout(tick, 5 + Math.random() * 9);
     } else {
       caret.classList.add('done');
-      setTimeout(() => typeParagraph(index + 1), 450);
+      setTimeout(() => typeParagraph(index + 1), 320);
     }
   }
   tick();
+}
+
+/* Ketuk surat = langsung tampil semua, supaya ga harus nunggu lama. */
+if(letterCard){
+  letterCard.addEventListener('click', (e) => {
+    if(e.target.closest('.next-btn')) return;
+    finishLetter();
+  });
+  letterCard.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); finishLetter(); }
+  });
 }
 
 if('IntersectionObserver' in window){
