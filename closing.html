@@ -152,10 +152,25 @@
   }
   .slot svg{ width:26px; height:26px; color:var(--ocean-mid); opacity:.6; }
   .slot span{ font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; opacity:.75; }
-  .slot.has-photo{ border-style:solid; border-color:rgba(0,119,182,.28); }
+  .slot.has-photo{ border-style:solid; border-color:rgba(0,119,182,.28); overflow:hidden; }
   .slot.has-photo svg,
   .slot.has-photo span{ display:none; }
-  .slot[data-photo="cl1"]{ background-image:url('./assets/photos/closing-1.jpg'),url('./assets/photos/closing-1.png'); }
+
+  /* Foto ditampilkan utuh (contain) di atas latar blur (cover), jadi
+     foto portrait tidak ikut terpotong. Foto yang sama dipakai dua
+     kali: ::before jadi blur, ::after jadi foto tajam di atasnya. */
+  .slot.has-photo::before{
+    content:''; position:absolute; inset:-8%;
+    background-image:var(--p); background-size:cover; background-position:center;
+    background-repeat:no-repeat; filter:blur(10px); transform:scale(1.06);
+  }
+  .slot.has-photo::after{
+    content:''; position:absolute; inset:0;
+    background-image:var(--p); background-size:contain; background-position:center;
+    background-repeat:no-repeat;
+  }
+
+  .slot[data-photo="cl1"]{ --p:url('./assets/photos/cl1.jpg'),url('./assets/photos/cl1.png'); }
 
   .letter p{
     margin:0 0 18px; font-size:16px; line-height:1.8; color:var(--ink-soft);

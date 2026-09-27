@@ -147,6 +147,38 @@
   .slot.tall{ aspect-ratio:5/7; }
   .slot.wide{ aspect-ratio:16/10; }
 
+  /* Slideholder disembunyikan begitu fotonya benar-benar ketemu, lalu
+     digantikan fotonya. Sebelumnya aturan ini tidak ada sama sekali,
+     jadi slot di halaman ini tidak akan berubah apa pun walaupun
+     fotonya sudah ditaruh. */
+  .slot.has-photo{
+    border-style:solid; border-color:rgba(0,119,182,.28);
+    background-color:var(--cream-2);
+    overflow:hidden;
+  }
+  .slot.has-photo svg,
+  .slot.has-photo span{ display:none; }
+
+  /* Foto ditampilkan utuh (contain) di atas latar blur (cover), jadi
+     foto portrait tidak ikut terpotong. Foto yang sama dipakai dua
+     kali: ::before jadi blur, ::after jadi foto tajam di atasnya. */
+  .slot.has-photo::before{
+    content:''; position:absolute; inset:-8%;
+    background-image:var(--p); background-size:cover; background-position:center;
+    background-repeat:no-repeat; filter:blur(10px); transform:scale(1.06);
+  }
+  .slot.has-photo::after{
+    content:''; position:absolute; inset:0;
+    background-image:var(--p); background-size:contain; background-position:center;
+    background-repeat:no-repeat;
+  }
+
+  /* Masing-masing slot menunjuk ke fotonya sendiri, dengan .jpg dicoba
+     dulu lalu .png (logika probe di script bawah memakai urutan sama). */
+  .slot[data-photo="hp1"]{ --p:url('./assets/photos/hp1.jpg'),url('./assets/photos/hp1.png'); }
+  .slot[data-photo="hp2"]{ --p:url('./assets/photos/hp2.jpg'),url('./assets/photos/hp2.png'); }
+  .slot[data-photo="hp3"]{ --p:url('./assets/photos/hp3.jpg'),url('./assets/photos/hp3.png'); }
+
   .quote{
     margin:20px auto; max-width:38ch; text-align:center;
     font-family:'Playfair Display', serif; font-weight:700; font-style:italic;

@@ -66,6 +66,7 @@
   .tile.plain{ padding:0; border-radius:2px; }
   .tile.polaroid{ padding:7px 7px 22px; border-radius:2px; }
   .tile .ph{
+    position:relative;
     width:100%; height:100%;
     background-color:#E4F2F9;
     background-repeat:no-repeat; background-size:cover; background-position:center;
@@ -75,12 +76,27 @@
   .tile .ph.has-photo svg{ display:none; }
   .tile.polaroid .ph{ aspect-ratio:1/1; }
 
-  .ph[data-photo="sb2"]{ background-image:url('./assets/photos/scrapbook-2.jpg'),url('./assets/photos/scrapbook-2.png'); }
-  .ph[data-photo="sb3"]{ background-image:url('./assets/photos/scrapbook-3.jpg'),url('./assets/photos/scrapbook-3.png'); }
-  .ph[data-photo="sb4"]{ background-image:url('./assets/photos/scrapbook-4.jpg'),url('./assets/photos/scrapbook-4.png'); }
-  .ph[data-photo="sb5"]{ background-image:url('./assets/photos/scrapbook-5.jpg'),url('./assets/photos/scrapbook-5.png'); }
-  .ph[data-photo="sb6"]{ background-image:url('./assets/photos/scrapbook-6.jpg'),url('./assets/photos/scrapbook-6.png'); }
-  .ph[data-photo="sb7"]{ background-image:url('./assets/photos/scrapbook-7.jpg'),url('./assets/photos/scrapbook-7.png'); }
+  /* Foto ditampilkan utuh (contain) di atas latar blur (cover), jadi
+     foto portrait tidak ikut terpotong. Foto yang sama dipakai dua
+     kali: ::before jadi blur, ::after jadi foto tajam di atasnya. */
+  .tile .ph.has-photo{ overflow:hidden; }
+  .tile .ph.has-photo::before{
+    content:''; position:absolute; inset:-8%;
+    background-image:var(--p); background-size:cover; background-position:center;
+    background-repeat:no-repeat; filter:blur(10px); transform:scale(1.06);
+  }
+  .tile .ph.has-photo::after{
+    content:''; position:absolute; inset:0;
+    background-image:var(--p); background-size:contain; background-position:center;
+    background-repeat:no-repeat;
+  }
+
+  .ph[data-photo="sb2"]{ --p:url('./assets/photos/sb2.jpg'),url('./assets/photos/sb2.png'); }
+  .ph[data-photo="sb3"]{ --p:url('./assets/photos/sb3.jpg'),url('./assets/photos/sb3.png'); }
+  .ph[data-photo="sb4"]{ --p:url('./assets/photos/sb4.jpg'),url('./assets/photos/sb4.png'); }
+  .ph[data-photo="sb5"]{ --p:url('./assets/photos/sb5.jpg'),url('./assets/photos/sb5.png'); }
+  .ph[data-photo="sb6"]{ --p:url('./assets/photos/sb6.jpg'),url('./assets/photos/sb6.png'); }
+  .ph[data-photo="sb7"]{ --p:url('./assets/photos/sb7.jpg'),url('./assets/photos/sb7.png'); }
 
   .sticker{
     position:absolute; z-index:6; pointer-events:none;
