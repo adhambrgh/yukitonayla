@@ -1,0 +1,17 @@
+Yuki
+Device HP
+Link
+
+design md:
+-background warna biru
+-stiker beruang coklat dan putih dengan animasi yang bisa bergerak 
+- tema lautan 
+
+Isi:
+1. Halaman welcome ( ingat ga hari ini hari apa) ✅
+2. membuka pin dnegan konsep warna biru dan terdapat stiker stiker fauna lautan  ✅
+3. Halaman Ucapan pertama dengan stiker stiker fauna, background ada efek love love jatuh dan lagu dimuali setelah memasukkan pin  ✅ (lagu "About You" looping, nyambung terus antar halaman)
+4. Halaman Foto foto moment, dengan stiker stikeran, ✅
+5. Halaman Kataa kata lagi, dan harapan harpan doa ✅
+6. video video moment dan stiker stiker an ✅
+7. kata penutup ambe closingan ✅

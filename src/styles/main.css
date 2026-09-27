@@ -1,0 +1,96 @@
+/* === DhamTech Ocean Romance === */
+:root {
+  --primary:#006994; --secondary:#0096C7; --accent:#48CAE4; --light:#CAF0F8; --white:#FFF;
+  --bear-brown:#8B5E3C; --love-pink:#FF6B9D; --shadow:0 4px 12px rgba(0,0,0,0.08);
+  --radius:12px; --transition:0.3s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Quicksand","Poppins",sans-serif;background:#CAF0F8;color:#FFF;line-height:1.6;-webkit-font-smoothing:antialiased}
+.scroll-indicator{position:fixed;top:0;left:0;height:3px;background:var(--primary);z-index:1000;transition:width 0.3s}
+.main{min-height:100vh;max-width:480px;margin:0 auto;padding:1rem}
+/* Sections */
+.section{background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:var(--radius);padding:2rem;margin-bottom:1.5rem;box-shadow:var(--shadow);transition:transform .3s}
+.section-welcome{background:linear-gradient(180deg,#fff,#f0f8ff)}
+.section-pin{background:linear-gradient(180deg,#f0f8ff,#e6f0ff)}
+.section-message{background:linear-gradient(180deg,#fff,#fafafa)}
+.section-photos{background:linear-gradient(180deg,#fff,#f0f8ff)}
+.section-words{background:linear-gradient(180deg,#fff,#f0f8ff)}
+.section-videos{background:linear-gradient(180deg,#fff,#f0f8ff)}
+.section-closing{background:linear-gradient(180deg,#f0f8ff,#e6f0ff)}
+/* Bg layers */
+.ocean-bg{position:absolute;inset:0;background:linear-gradient(135deg,#006994,#48CAE4);z-index:0;border-radius:var(--radius)}
+.bubbles-layer{position:absolute;inset:0;pointer-events:none;z-index:1}
+.bubble{position:absolute;bottom:-20px;width:10px;height:10px;background:rgba(255,255,255,0.25);border-radius:50%;animation:floatBubble var(--duration,8s) var(--delay,0s) infinite ease-in-out}
+@keyframes floatBubble{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:.8}90%{opacity:.6}100%{transform:translateY(calc(-100vh - 20px)) translateX(var(--drift,0px));opacity:0}}
+.floating-stickers{position:absolute;inset:0;pointer-events:none;z-index:2}
+.float-sticker{position:absolute;width:40px;height:40px;animation:floatSticker 3s ease-in-out infinite var(--delay,0s);opacity:0.7}
+.float-sticker svg{width:100%;height:100%}
+@keyframes floatSticker{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-15px) rotate(10deg)}}
+/* Seaweed */
+.seaweed{position:absolute;bottom:0;width:8px;border-radius:4px;background:#2A9D8F;opacity:0.4;animation:seaweedSway var(--height,120px) ease-in-out infinite var(--delay,0s)}
+@keyframes seaweedSway{0%,100%{transform:skewX(0)}50%{transform:skewX(8deg)}}
+/* Bear */
+.welcome-bear,.pin-bear,.message-bear,.closing-bear{display:flex;justify-content:center;margin-bottom:1.5rem}
+.welcome-bear svg,.pin-bear svg,.message-bear svg,.closing-bear svg{width:120px;height:120px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15))}
+/* Typography */
+.welcome-title,.pin-title,.message-title,.section-heading,.closing-title{font-size:1.5rem;font-weight:700;color:var(--primary);text-align:center;margin-bottom:.5rem}
+.section-subtitle{font-size:.95rem;color:#666;text-align:center;margin-bottom:1.5rem}
+.welcome-subtitle{text-align:center;font-size:1rem;color:#555;margin-bottom:1.5rem}
+/* PIN */
+.pin-input-group{display:flex;gap:.5rem;flex-direction:column}
+.pin-input{width:100%;padding:.8rem 1rem;border:2px solid var(--accent);border-radius:8px;font-size:1.2rem;text-align:center;outline:none;transition:border-color .3s}
+.pin-input:focus{border-color:var(--primary)}
+.pin-feedback{text-align:center;margin-top:.5rem;font-size:.9rem;min-height:1.2em}
+.pin-success{color:#2A9D8F;font-weight:600}
+.pin-error{color:var(--love-red);font-weight:600}
+/* Message card */
+.message-card{background:rgba(255,255,255,0.9);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.message-text{font-size:1rem;line-height:1.8;color:#333;white-space:pre-line}
+/* Music */
+.music-control{position:fixed;bottom:1.5rem;right:1.5rem;z-index:100}
+.music-toggle{width:48px;height:48px;border-radius:50%;background:var(--white);border:2px solid var(--primary);color:var(--primary);font-size:1.2rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:all .3s;display:flex;align-items:center;justify-content:center}
+.music-toggle:hover{background:var(--primary);color:var(--white);transform:scale(1.1)}
+.music-toggle svg{width:20px;height:20px}
+.music-fallback{display:flex;flex-direction:column;gap:.3rem;padding:.8rem;background:var(--light);border-radius:var(--radius);animation:fadeIn .3s}
+/* Photos */
+.photos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+.photo-card{background:var(--light);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.photo-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.photo-placeholder svg{width:80%;height:80%}
+.photo-caption{font-size:.8rem;color:#666;padding:.5rem;text-align:center}
+/* Words */
+.words-grid{display:flex;flex-direction:column;gap:1rem}
+.word-card{background:rgba(255,255,255,0.9);border-radius:var(--radius);padding:1.2rem;animation:slideUp .4s ease-out}
+.word-icon svg{width:32px;height:32px}
+.word-label{font-size:.8rem;color:#888;text-transform:uppercase;letter-spacing:.05em}
+.word-text{font-size:1rem;line-height:1.6;margin-top:.3rem;color:#333}
+/* Videos */
+.videos-grid{display:flex;flex-direction:column;gap:1rem}
+.video-card{background:var(--light);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.video-player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--radius) var(--radius) 0 0;overflow:hidden}
+.video-player video{width:100%;height:100%;object-fit:cover}
+.video-caption{font-size:.8rem;color:#666;padding:.5rem;text-align:center}
+/* Closing */
+.closing-card{background:rgba(255,255,255,0.9);border-radius:var(--radius);padding:1.5rem;margin-top:1rem}
+.closing-message,.closing-final{font-size:1rem;line-height:1.8;color:#333;white-space:pre-line;margin-bottom:1rem}
+.closing-signature{font-size:1.1rem;font-weight:600;color:var(--primary)}
+.branding{text-align:center;margin-top:2rem;font-size:.85rem;color:var(--primary);opacity:.7}
+/* Buttons */
+.btn{display:inline-block;padding:.7rem 1.5rem;border:none;border-radius:8px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .3s;text-decoration:none;font-size:1rem}
+.btn-primary{background:var(--primary);color:var(--white)}
+.btn-primary:hover{background:#005f87;transform:translateY(-1px)}
+.btn-continue{background:var(--accent);color:var(--white)}
+.btn-continue:hover{background:#3d8b6e;transform:translateY(-1px)}
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.is-visible{animation:fadeIn .5s ease-out}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){.bubble,.float-sticker,.seaweed{animation:none!important}.is-visible{animation:none!important}}
+/* Responsive */
+@media(min-width:420px){.main{padding:2rem}.section{padding:2.5rem}.photos-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.main{max-width:600px}.welcome-title,.pin-title,.message-title,.section-heading,.closing-title{font-size:2rem}}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--light)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+/* Print */
+@media print{.music-control,.floating-stickers,.bubbles-layer,.seaweeds-layer{display:none!important}}

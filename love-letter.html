@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cieee Udah Bisa Dibuka!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
+
+  :root{
+    --ocean-deep:#00416B;
+    --ocean-mid:#0077B6;
+    --ocean-light:#0096C7;
+    --ocean-bright:#48CAE4;
+    --ocean-pale:#CAF0F8;
+    --coral:#FF6B6B;
+    --seafoam:#2A9D8F;
+    --ink:#002D4A;
+    --card:#f8fdff;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  body{
+    min-height:100vh;
+    font-family:'Quicksand', sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+    background: url('./assets/images/2.png') center / cover no-repeat fixed, linear-gradient(180deg, rgba(0,65,107,.45) 0%, rgba(0,105,148,.45) 50%, rgba(72,202,228,.5) 100%);
+    overflow-x:hidden; overflow-y:auto;
+    position:relative;
+  }
+
+  .ocean-bg-layer{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+
+  .ocean-rays{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background: radial-gradient(ellipse at 50% 0%, rgba(202,240,248,.35) 0%, rgba(72,202,228,.1) 45%, transparent 70%);
+  }
+
+  .bubble{
+    position:absolute; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, rgba(255,255,255,.6) 0%, rgba(202,240,248,.25) 45%, rgba(72,202,228,.1) 75%, transparent 100%);
+    border:1px solid rgba(255,255,255,.35);
+    box-shadow: 0 0 10px rgba(255,255,255,.3) inset, 0 3px 10px rgba(0,35,75,.18);
+    animation:floatUp linear infinite;
+    pointer-events:none;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(105vh) translateX(0) scale(0.3); opacity:0; }
+    15%{ opacity:.8; }
+    50%{ transform:translateY(50vh) translateX(12px) scale(0.9); }
+    85%{ opacity:.8; }
+    100%{ transform:translateY(-15vh) translateX(-10px) scale(1.1); opacity:0; }
+  }
+
+  .fauna-fish{ position:absolute; pointer-events:none; z-index:1; animation:swimAcross linear infinite; filter:drop-shadow(0 6px 14px rgba(0,30,70,.3)); border-radius:50%; object-fit:cover; }
+  @keyframes swimAcross{
+    0%{ transform:translateX(-140px) translateY(0); }
+    49.9%{ transform:translateX(calc(100vw + 140px)) translateY(-25px); }
+    50%{ transform:translateX(calc(100vw + 140px)) translateY(-25px) scaleX(-1); }
+    99.9%{ transform:translateX(-140px) translateY(10px) scaleX(-1); }
+    100%{ transform:translateX(-140px) translateY(0); }
+  }
+
+  .jelly{ position:absolute; pointer-events:none; z-index:1; opacity:.75; animation:jellyRise linear infinite; }
+  @keyframes jellyRise{
+    0%{ transform:translateY(110vh) scale(0.85); opacity:0; }
+    20%{ opacity:.85; }
+    50%{ transform:translateY(50vh) scale(1.05); }
+    80%{ opacity:.85; }
+    100%{ transform:translateY(-20vh) scale(0.95); opacity:0; }
+  }
+  .jelly img{ animation:jellyPulse 2.5s ease-in-out infinite; border-radius:50%; object-fit:cover; }
+  @keyframes jellyPulse{ 0%,100%{ transform:scaleY(1); } 50%{ transform:scaleY(0.8) scaleX(1.1); } }
+
+  .ocean-animals{ position:absolute; top:12px; left:50%; transform:translateX(-50%); display:flex; gap:18px; opacity:.55; z-index:5; pointer-events:none; animation:floatHoriz 20s ease-in-out infinite; }
+  @keyframes floatHoriz{ 0%,100%{ transform:translateX(-50%) translateY(0); } 50%{ transform:translateX(-50%) translateY(-8px); } }
+  .ocean-animals img{ width:28px; height:28px; }
+
+  .deco-img{
+    position:fixed; z-index:2; pointer-events:none;
+    filter:drop-shadow(0 12px 24px rgba(0,40,90,.35));
+    border-radius:20px;
+    background: var(--ocean-pale);
+  }
+  .deco-img.img1{ width:85px; top:7%; left:4%; animation:decoFloat1 8s ease-in-out infinite; opacity:.8; }
+  .deco-img.img2{ width:95px; top:9%; right:4%; animation:decoFloat2 9.5s ease-in-out infinite; opacity:.8; }
+  .deco-img.img4{ width:75px; bottom:13%; right:5%; animation:decoFloat1 8.5s ease-in-out infinite reverse; animation-delay:-3s; opacity:.85; }
+  .deco-img.img5{ width:75px; top:48%; left:2%; animation:decoFloat1 11s ease-in-out infinite; opacity:.7; }
+  .deco-img.img6{ width:80px; top:32%; right:2%; animation:decoFloat2 10s ease-in-out infinite; opacity:.7; }
+  .deco-img.img7{ width:52px; top:24%; left:4%; animation:decoSpin 18s linear infinite; opacity:.65; }
+  .deco-img.img8{ width:65px; bottom:7%; left:4%; animation:decoFloat2 10.5s ease-in-out infinite reverse; opacity:.75; }
+  @keyframes decoFloat1{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-18px) rotate(5deg); } }
+  @keyframes decoFloat2{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-20px) rotate(-5deg); } }
+  @keyframes decoSpin{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
+
+  /* ===== Love letter card ===== */
+  .letter-card{
+    position:relative; z-index:10; width:100%; max-width:420px;
+    background:#fffdf8;
+    border:1px solid rgba(255,255,255,.92);
+    border-radius:32px; padding:38px 30px 30px;
+    box-shadow:0 28px 56px -24px rgba(0,35,75,.5), 0 0 0 1px rgba(72,202,228,.08) inset;
+    text-align:center;
+  }
+
+  .anniversary-note{
+    display:block; margin-top:8px;
+    color:var(--coral); font-size:.56em;
+    letter-spacing:.04em;
+  }
+
+  .love-quote{
+    position:relative; margin:26px -4px 24px 2px; padding:26px 22px 16px 24px;
+    color:var(--ocean-deep); text-align:left;
+    background:#fff8e3;
+    border:1px solid rgba(209,164,63,.32);
+    border-radius:7px 18px 9px 20px;
+    transform:rotate(-.8deg);
+    box-shadow:0 16px 28px -20px rgba(0,45,74,.5);
+  }
+  .love-quote::before{
+    content:'“'; position:absolute; top:8px; left:10px;
+    color:rgba(0,119,182,.18); font-family:'Baloo 2',sans-serif;
+    font-size:52px; line-height:1;
+  }
+  .love-quote .tape{
+    position:absolute; top:-10px; width:66px; height:18px;
+    background:rgba(72,202,228,.32);
+    border-left:1px dashed rgba(255,255,255,.7);
+    border-right:1px dashed rgba(255,255,255,.7);
+  }
+  .love-quote .tape.left{ left:20px; transform:rotate(-9deg); }
+  .love-quote .tape.right{ right:52px; width:48px; transform:rotate(8deg); background:rgba(255,107,107,.26); }
+  .love-quote .seal{
+    position:absolute; top:-17px; right:16px; width:36px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--coral); border-radius:50% 46% 52% 48%;
+    box-shadow:0 7px 14px -7px rgba(180,40,60,.65);
+    transform:rotate(8deg);
+  }
+  .love-quote .seal svg{ width:16px; height:16px; }
+  .love-quote p{
+    position:relative; margin:0 0 10px; padding-left:16px;
+    font-family:'Baloo 2',sans-serif; font-size:18px;
+    font-weight:600; line-height:1.5;
+  }
+  .love-quote cite{
+    display:flex; align-items:center; gap:8px; padding-left:16px;
+    color:var(--ocean-mid); font-size:12px; font-style:normal; font-weight:700;
+  }
+  .love-quote cite::before{ content:''; width:22px; height:2px; background:rgba(0,119,182,.35); border-radius:2px; }
+
+  .confetti-layer{
+    position:fixed; inset:0; z-index:4; overflow:hidden;
+    pointer-events:none;
+  }
+  .confetti-piece{
+    position:absolute; top:-20px; left:var(--x);
+    width:7px; height:14px; background:var(--tone); opacity:0;
+    animation:confettiFall var(--duration) var(--delay) linear infinite;
+  }
+  .confetti-piece:nth-child(3n){ width:5px; height:10px; }
+  .confetti-piece:nth-child(4n){ width:9px; height:5px; border-radius:50%; }
+  .confetti-piece.tone-coral{ --tone:var(--coral); }
+  .confetti-piece.tone-gold{ --tone:#E9B949; }
+  .confetti-piece.tone-foam{ --tone:var(--seafoam); }
+  .confetti-piece.tone-blue{ --tone:var(--ocean-bright); }
+  @keyframes confettiFall{
+    0%{ transform:translate3d(0,-24px,0) rotate(0); opacity:0; }
+    10%{ opacity:.85; }
+    100%{ transform:translate3d(var(--drift),110vh,0) rotate(540deg); opacity:0; }
+  }
+
+  .letter-card .card-peeker{
+    position:absolute; top:-38px; right:-20px; width:76px; height:76px;
+    pointer-events:none; z-index:15;
+    filter:drop-shadow(0 10px 16px rgba(0,40,90,.3));
+    animation:peekBob 4s ease-in-out infinite;
+  }
+  .letter-card .card-peeker img{ width:100%; height:100%; object-fit:contain; }
+  @keyframes peekBob{ 0%,100%{ transform:translateY(0) rotate(8deg); } 50%{ transform:translateY(-8px) rotate(14deg); } }
+
+  .letter-card .card-corner-dec{
+    position:absolute; bottom:-28px; left:-22px; width:70px; height:70px;
+    pointer-events:none; z-index:15;
+    filter:drop-shadow(0 8px 14px rgba(0,40,90,.3));
+    animation:cornerBob 4.5s ease-in-out infinite;
+  }
+  .letter-card .card-corner-dec img{ width:100%; height:100%; object-fit:contain; }
+  @keyframes cornerBob{ 0%,100%{ transform:translateY(0) rotate(-10deg); } 50%{ transform:translateY(-6px) rotate(-16deg); } }
+
+  .mascot{
+    width:120px; height:120px; object-fit:contain; margin:0 auto 14px;
+    display:block; filter:drop-shadow(0 10px 18px rgba(0,70,120,.25));
+    animation:bob 2.6s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-8px) rotate(-2deg); } }
+
+  h1{
+    margin:0 0 8px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700; font-size:24px; line-height:1.35;
+    color:var(--ocean-deep);
+  }
+
+  .letter-body{
+    margin:16px 0 22px;
+    font-size:14px; font-weight:600; line-height:1.7;
+    color:var(--ink); opacity:.9;
+    text-align:left;
+    background:rgba(202,240,248,.2);
+    border-radius:18px; padding:20px 22px;
+    border:1px solid rgba(72,202,228,.2);
+  }
+  .letter-body p{ margin:0 0 12px; }
+  .letter-body p:last-child{ margin-bottom:0; }
+  .letter-body .highlight{
+    color:var(--ocean-deep); font-weight:700;
+    background:rgba(72,202,228,.12);
+    padding:1px 6px; border-radius:6px;
+  }
+
+  .tap-btn{
+    position:relative;
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 28px; border:none; border-radius:999px;
+    background:linear-gradient(135deg, var(--ocean-bright) 0%, var(--ocean-light) 100%);
+    color:#fff; font-family:'Baloo 2', sans-serif;
+    font-weight:700; font-size:16px; cursor:pointer;
+    box-shadow:0 14px 28px -10px rgba(72,202,228,.55);
+    animation:pulse 1.8s ease-in-out infinite;
+    transition:transform .15s;
+  }
+  .tap-btn:hover{ filter:brightness(1.08); }
+  .tap-btn:active{ transform:scale(.95); }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
+
+  .tap-btn svg{ width:18px; height:18px; }
+
+  .sign-off{
+    margin-top:18px; font-size:13px; font-weight:700;
+    color:var(--ocean-mid); opacity:.7;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .sign-off svg{ width:16px; height:16px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .mascot,.tap-btn,.bubble,.fauna-fish,.jelly,.ocean-animals,.deco-img,.confetti-piece,.letter-card .card-peeker,.letter-card .card-corner-dec{ animation:none!important; }
+  }
+  @media (max-width:420px){
+    .letter-card{ padding:28px 20px 24px; }
+    h1{ font-size:20px; }
+    .letter-card .card-peeker{ width:60px; height:60px; top:-30px; right:-15px; }
+    .letter-card .card-corner-dec{ width:55px; height:55px; bottom:-22px; left:-18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ocean-rays"></div>
+<div class="ocean-bg-layer" id="oceanBg"></div>
+
+<div class="ocean-animals" id="oceanAnimals"></div>
+<div class="confetti-layer" id="confetti" aria-hidden="true"></div>
+
+<img class="deco-img img1" src="./assets/images/5.png" alt="" />
+<img class="deco-img img2" src="./assets/images/4.png" alt="" />
+<img class="deco-img img4" src="./assets/images/6.png" alt="" />
+<img class="deco-img img5" src="./assets/images/9.png" alt="" />
+<img class="deco-img img6" src="./assets/images/8.png" alt="" />
+<img class="deco-img img7" src="./assets/images/7.png" alt="" />
+<img class="deco-img img8" src="./assets/images/3.png" alt="" />
+
+<div class="letter-card">
+  <div class="card-peeker"><img src="./assets/images/5.png" alt="" /></div>
+  <div class="card-corner-dec"><img src="./assets/images/4.png" alt="" /></div>
+
+  <img class="mascot" src="./assets/images/1.png" alt="" />
+
+  <h1>cieee udah bisa<br>dibuka!<span class="anniversary-note">happy anniversary, sayang</span></h1>
+
+  <div class="letter-body">
+    <p>hehehe makasih udah berhasil nebak passwordnya!</p>
+    <p>sebenernya ini cuma hal kecil sih, tapi aku seneng bisa bikin sesuatu yang <span class="highlight">spesial</span> buat kamu.</p>
+    <p>setiap pixel di halaman ini aku bikin dengan <span class="highlight">penuh sayang</span>, semoga kamu suka yaa!</p>
+    <p>Love you more than the ocean love the moon </p>
+  </div>
+
+  <blockquote class="love-quote">
+    <span class="tape left" aria-hidden="true"></span>
+    <span class="tape right" aria-hidden="true"></span>
+    <span class="seal" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-6.5-3.9-8.7-7.6C1.9 9.6 3 6.5 6.2 6.5c1.7 0 2.9.9 4 2.3C11.3 7.4 12.5 6.5 14.2 6.5c3.2 0 4.3 3.1 2.9 5.9C18.3 12.1 16 16 12 20z"/></svg>
+    </span>
+    <p>Di antara semua isi laut, kamu jadi bagian favoritku.</p>
+    <cite>untuk kamu, dari aku</cite>
+  </blockquote>
+
+  <button class="tap-btn" id="tapBtn">
+    buka suratku
+   </button>
+
+  <div class="sign-off">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9C.2 8.8 1.6 5 5.3 5c2 0 3.4 1 4.7 2.7C11.3 6 12.7 5 14.7 5 18.4 5 19.8 8.8 22 12c-2.5 4.4-10 9-10 9z"/></svg>
+    <span>dari aku, buat kamu selamanya</span>
+  </div>
+</div>
+
+<script>
+const oceanBg = document.getElementById('oceanBg');
+const oceanAnimals = document.getElementById('oceanAnimals');
+const confetti = document.getElementById('confetti');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if(confetti && !reduceMotion){
+  const tones = ['coral', 'gold', 'foam', 'blue'];
+  for(let i = 0; i < 18; i++){
+    const piece = document.createElement('i');
+    piece.className = `confetti-piece tone-${tones[i % tones.length]}`;
+    piece.style.setProperty('--x', `${(i * 17 + 7) % 100}%`);
+    piece.style.setProperty('--delay', `${(i * .37).toFixed(2)}s`);
+    piece.style.setProperty('--duration', `${4.5 + (i % 5) * .45}s`);
+    piece.style.setProperty('--drift', `${-28 + (i % 7) * 9}px`);
+    confetti.appendChild(piece);
+  }
+}
+
+/* ===== Bubbles ===== */
+for(let i = 0; i < 28; i++){
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const size = Math.random() * 18 + 6;
+  b.style.width = size + 'px'; b.style.height = size + 'px';
+  b.style.left = Math.random() * 100 + '%';
+  b.style.animationDuration = (Math.random() * 10 + 8) + 's';
+  b.style.animationDelay = (Math.random() * 12) + 's';
+  oceanBg.appendChild(b);
+}
+
+/* ===== Fauna pakai gambar assets ===== */
+const faunaImgs = ['./assets/images/4.png','./assets/images/5.png','./assets/images/3.png','./assets/images/6.png'];
+
+for(let i = 0; i < 8; i++){
+  const f = document.createElement('img');
+  f.className = 'fauna-fish';
+  f.src = faunaImgs[i % faunaImgs.length];
+  f.alt = '';
+  f.style.top = (Math.random() * 65 + 8) + '%';
+  f.style.animationDuration = (Math.random() * 18 + 14) + 's';
+  f.style.animationDelay = (Math.random() * 12) + 's';
+  const w = Math.random() * 40 + 50;
+  f.style.width = w + 'px';
+  f.style.height = w + 'px';
+  oceanBg.appendChild(f);
+}
+
+for(let i = 0; i < 5; i++){
+  const j = document.createElement('img');
+  j.className = 'jelly';
+  j.src = faunaImgs[(i + 2) % faunaImgs.length];
+  j.alt = '';
+  j.style.left = (Math.random() * 90 + 5) + '%';
+  j.style.animationDuration = (Math.random() * 14 + 18) + 's';
+  j.style.animationDelay = (Math.random() * 10) + 's';
+  const w = Math.random() * 30 + 50;
+  j.style.width = w + 'px';
+  j.style.height = w + 'px';
+  oceanBg.appendChild(j);
+}
+
+for(let i = 0; i < 4; i++){
+  const im = document.createElement('img');
+  im.src = faunaImgs[i % faunaImgs.length];
+  im.alt = '';
+  im.style.width = '28px'; im.style.height = '28px';
+  im.style.animationDelay = (i * 0.5) + 's';
+  im.style.opacity = (Math.random() * 0.3 + 0.4) + '';
+  oceanAnimals.appendChild(im);
+}
+
+/* ===== Tap button ===== */
+document.getElementById('tapBtn').addEventListener('click', () => {
+  window.location.href = 'gift.html';
+});
+</script>
+
+</body>
+</html>
