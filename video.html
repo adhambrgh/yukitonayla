@@ -24,9 +24,11 @@
   *{ box-sizing:border-box; }
   html,body{ margin:0; padding:0; }
 
+  /* flex-direction WAJIB column: tanpa itu .topnav dan .stage jadi anak
+     flex row sehingga video terperas (ditemukan lewat pengukuran geometri). */
   body{
     min-height:100vh; position:relative; overflow-x:hidden;
-    display:flex; align-items:flex-start; justify-content:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
     padding:16px 16px 44px;
     font-family:'Quicksand', sans-serif; color:#fff;
     background:
@@ -80,23 +82,23 @@
      "tidak bisa ke halaman selanjutnya" hilang. */
   .topnav{
     position:sticky; top:0; z-index:20;
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    width:100%; max-width:420px; margin:0 auto 14px; padding:8px 10px;
+    display:flex; align-items:center; justify-content:flex-end; gap:8px;
+    width:100%; max-width:420px; margin:0 auto 14px; padding:7px 8px;
     background:rgba(4,32,58,.72); border:1px solid rgba(202,240,248,.18);
     border-radius:999px; backdrop-filter:blur(6px);
   }
   .topnav a{
-    display:flex; align-items:center; gap:5px; flex:0 1 auto; min-width:0;
-    padding:7px 13px; border-radius:999px; text-decoration:none;
-    font-size:12.5px; font-weight:700; white-space:nowrap;
-    background:rgba(255,255,255,.1); color:var(--ocean-pale);
-    border:1px solid rgba(202,240,248,.22);
-    transition:background .18s ease, transform .15s ease;
+    display:flex; align-items:center; gap:5px; min-width:0;
+    padding:8px 16px; border-radius:999px; text-decoration:none;
+    font-size:13px; font-weight:700; white-space:nowrap;
+    background:linear-gradient(135deg, var(--ocean-bright) 0%, var(--ocean-mid) 100%);
+    color:#fff; border:1px solid rgba(202,240,248,.22);
+    box-shadow:0 8px 16px -12px rgba(0,0,0,.6);
+    transition:filter .18s ease, transform .15s ease;
   }
-  .topnav a:hover{ background:rgba(72,202,228,.3); transform:translateY(-1px); }
+  .topnav a:hover{ filter:brightness(1.1); transform:translateY(-1px); }
   .topnav a:focus-visible{ outline:3px solid rgba(255,201,143,.9); outline-offset:2px; }
-  .topnav svg{ width:14px; height:14px; flex-shrink:0; }
-  .topnav a span{ overflow:hidden; text-overflow:ellipsis; }
+  .topnav svg{ width:15px; height:15px; flex-shrink:0; }
 
   /* Hemat sumber daya saat video diputar: matikan semua dekorasi
      yang sebelumnya bikin lag di HP. */
@@ -121,7 +123,7 @@
 
   /* align-items:flex-start + margin:auto centering supaya konten panjang
      tidak pernah terjepit/terpotong di layar pendek. */
-  .stage{ position:relative; z-index:2; width:100%; max-width:340px; margin:auto; }
+  .stage{ position:relative; z-index:2; width:100%; max-width:340px; margin:0 auto; }
 
   .device{
     position:relative;
@@ -296,33 +298,9 @@
     margin:22px 0 0; text-align:center;
     font-family:'Caveat', cursive; font-size:19px; font-weight:600; color:var(--gold);
   }
-  .hint{
-    margin:6px 0 0; text-align:center; font-size:12px; line-height:1.6;
-    letter-spacing:.04em; color:rgba(202,240,248,.75);
-  }
-  .hint b{ color:var(--ocean-bright); }
-
-  .actions{ display:flex; flex-direction:column; gap:10px; margin-top:22px; }
-  .btn{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    padding:13px 20px; border-radius:999px; text-decoration:none;
-    font-size:15px; font-weight:700;
-    transition:transform .15s ease, filter .15s ease;
-  }
-  .btn-primary{
-    background:linear-gradient(135deg, var(--ocean-bright) 0%, var(--ocean-mid) 100%);
-    color:#fff; box-shadow:0 10px 18px -14px rgba(0,0,0,.5);
-  }
-  .btn-ghost{
-    background:rgba(255,255,255,.14); color:var(--ocean-pale);
-    border:1px solid rgba(202,240,248,.32);
-  }
-  .btn:hover{ transform:translateY(-2px); filter:brightness(1.08); }
-
   .ctrl-btn:focus-visible,
-  .vol-icon:focus-visible,
-  .upload-btn:focus-within,
-  .btn:focus-visible,
+  .vol-icon:focus-within,
+  .upload-btn:focus-visible,
   .title:focus-visible{
     outline:3px solid rgba(255,201,143,.9); outline-offset:3px;
   }
@@ -336,7 +314,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .bubble,.drifter,.spark,.deco,.drip{ animation:none!important; }
-    .btn,.ctrl-btn,.upload-btn,.title{ transition:none!important; }
+    .topnav a,.ctrl-btn,.upload-btn,.title{ transition:none!important; }
   }
 </style>
 </head>
@@ -345,8 +323,7 @@
 <div class="field" id="field"></div>
 
 <nav class="topnav" aria-label="Navigasi halaman">
-  <a href="harapan.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>harapan</span></a>
-  <a href="closing.html">lanjut<span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+  <a class="next" href="closing.html">lanjut<span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
 </nav>
 
 <img class="deco d1" src="./assets/images/5.png" alt="">
@@ -370,7 +347,7 @@
 
       <div class="veil" id="veil">
         <div class="spinner" id="veilSpinner"></div>
-        <p class="veil-msg" id="veilMsg">memuat video&hellip;</p>
+        <p class="veil-msg" id="veilMsg" hidden></p>
         <button class="play-fab" id="playFab" hidden aria-label="Putar video">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -427,11 +404,6 @@
 
 
   <p class="caption">momen-momen yang aku simpan buat kamu</p>
-
-  <div class="actions">
-    <a class="btn btn-primary" href="closing.html">buka kata penutup</a>
-    <a class="btn btn-ghost" href="harapan.html">kembali ke doa &amp; harapan</a>
-  </div>
 </main>
 
 <script>
@@ -475,13 +447,16 @@ function formatTime(sec){
   return m + ':' + s;
 }
 
+/* veilMsg hanya dipakai untuk pesan error. Teks "memuat video..." sengaja
+   dihapus: spinner saja sudah cukup, dan teks itu bikin halaman terasa rusak. */
 function showVeil(mode, msg){
   if(mode === 'none'){ veil.hidden = true; return; }
   veil.hidden = false;
   veilSpinner.hidden = (mode !== 'loading');
   playFab.hidden = (mode !== 'ready');
   retryBtn.hidden = (mode !== 'error');
-  if(msg) veilMsg.textContent = msg;
+  if(msg){ veilMsg.textContent = msg; veilMsg.hidden = false; }
+  else { veilMsg.textContent = ''; veilMsg.hidden = true; }
 }
 
 function showBuffering(on){
@@ -502,7 +477,7 @@ function handleMediaError(){
 function loadClip(clip){
   usingLocalFile = false;
   titleText.textContent = clip.title;
-  showVeil('loading', 'memuat video\u2026');
+  showVeil('loading');
   video.src = clip.url;
   video.load();
   const p = video.play();
@@ -510,7 +485,7 @@ function loadClip(clip){
 }
 
 retryBtn.addEventListener('click', () => {
-  showVeil('loading', 'memuat video\u2026');
+  showVeil('loading');
   video.load();
   const p = video.play();
   if(p && p.catch) p.catch(() => {});
@@ -528,7 +503,7 @@ fileInput.addEventListener('change', () => {
   if(!file) return;
   usingLocalFile = true;
   titleText.textContent = file.name.replace(/\.[^.]+$/, '');
-  showVeil('loading', 'memuat video dari hp\u2026');
+  showVeil('loading');
   video.src = URL.createObjectURL(file);
   video.load();
   const p = video.play();
@@ -700,7 +675,7 @@ for(let i = 0; i < 8; i++){
 // dan video tidak bisa diputar. Sekarang src-nya langsung ada di markup,
 // kita hanya menunggu event-nya.
 titleText.textContent = CLIP.title;
-showVeil('loading', 'memuat video\u2026');
+showVeil('loading');
 if(video.readyState >= 1){
   showVeil('ready');
   remainingTimeLabel.textContent = '-' + formatTime(video.duration);
